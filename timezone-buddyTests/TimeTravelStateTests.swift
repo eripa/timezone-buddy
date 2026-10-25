@@ -59,4 +59,22 @@ struct TimeTravelStateTests {
         #expect(state.offsetMinutes == 0)
         #expect(state.isNow)
     }
+
+    @Test
+    func requiredHoursRoundsUpToCoverOffset() {
+        #expect(TimeTravelState.requiredHours(forOffsetMinutes: 0) == 0)
+        #expect(TimeTravelState.requiredHours(forOffsetMinutes: 48 * 60) == 48)
+        #expect(TimeTravelState.requiredHours(forOffsetMinutes: 48 * 60 + 30) == 49)
+    }
+
+    @Test
+    func setOffsetRejectsMomentsOutsideTheSliderWindow() {
+        let state = TimeTravelState()
+
+        #expect(!state.setOffset(minutes: 49 * 60, maximumHours: 48))
+        #expect(state.offsetMinutes == 0)
+
+        #expect(state.setOffset(minutes: 48 * 60, maximumHours: 48))
+        #expect(state.offsetMinutes == 48 * 60)
+    }
 }
