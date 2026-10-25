@@ -57,6 +57,21 @@ final class TimeTravelState {
         offsetMinutes = min(max(offsetMinutes, -limit), limit)
     }
 
+    /// The number of whole hours needed to represent an offset in the slider.
+    static func requiredHours(forOffsetMinutes offsetMinutes: Double) -> Int {
+        let totalMinutes = Int(abs(offsetMinutes).rounded())
+        return (totalMinutes + 59) / 60
+    }
+
+    /// Sets the offset only when it fits inside the given slider window.
+    @discardableResult
+    func setOffset(minutes: Double, maximumHours: Int) -> Bool {
+        let limit = Double(max(maximumHours, 1)) * 60
+        guard abs(minutes) <= limit else { return false }
+        offsetMinutes = minutes
+        return true
+    }
+
     /// The date that should be displayed for a given real date.
     func date(from now: Date) -> Date {
         now.addingTimeInterval(offset)

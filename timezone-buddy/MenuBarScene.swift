@@ -83,6 +83,18 @@ struct MenuBarPanel: View {
         )
     }
 
+    /// The slider snaps while dragging, but allows exact-minute values set from
+    /// an editable clock.
+    private var sliderValueBinding: Binding<Double> {
+        Binding(
+            get: { timeTravel.offsetMinutes },
+            set: { newValue in
+                let snapped = (newValue / TimeTravelState.step).rounded() * TimeTravelState.step
+                timeTravel.offsetMinutes = snapped
+            }
+        )
+    }
+
     var body: some View {
         VStack(spacing: 0) {
             header
@@ -166,7 +178,8 @@ struct MenuBarPanel: View {
                         TimeZoneRow(
                             zone: zone,
                             date: previewDate,
-                            showEmoji: settings.showEmoji
+                            showEmoji: settings.showEmoji,
+                            onTimeChange: { setTime($0) }
                         )
                     }
                 }
@@ -209,9 +222,8 @@ struct MenuBarPanel: View {
             }
 
             Slider(
-                value: $timeTravel.offsetMinutes,
-                in: sliderRange,
-                step: TimeTravelState.step
+                value: sliderValueBinding,
+                in: sliderRange
             ) {
                 Text("Time offset")
             }
@@ -283,6 +295,27 @@ struct MenuBarPanel: View {
         return "Previewing \(day) at \(time)"
     }
 
+    /// Applies a time entered in a zone and keeps the slider and all other
+    /// zones in sync. Returns `false` when the requested moment is outside the
+    /// slider's maximum window.
+    private func setTime(_ target: Date) -> Bool {
+        let offsetMinutes = (target.timeIntervalSince(clock.now) / 60).rounded()
+        let requiredHours = TimeTravelState.requiredHours(forOffsetMinutes: offsetMinutes)
+
+        guard requiredHours <= AppSettings.timeTravelRangeLimits.upperBound else {
+            return false
+        }
+
+        if requiredHours > settings.timeTravelRangeHours {
+            settings.setTimeTravelRangeHours(requiredHours)
+        }
+
+        return timeTravel.setOffset(
+            minutes: offsetMinutes,
+            maximumHours: settings.timeTravelRangeHours
+        )
+    }
+
     // MARK: - Footer
 
     private var footer: some View {
@@ -318,6 +351,13 @@ private struct TimeZoneRow: View {
     let zone: TimeZoneConfig
     let date: Date
     let showEmoji: Bool
+    let onTimeChange: (Date) -> Bool
+
+    @State private var isEditing = false
+    @FocusState private var isEditingFocused: Bool
+    @State private var draft = ""
+    @State private var isInvalid = false
+    @State private var isHoveringTime = false
 
     var body: some View {
         HStack(spacing: 10) {
@@ -337,9 +377,8 @@ private struct TimeZoneRow: View {
             Spacer(minLength: 8)
 
             VStack(alignment: .trailing, spacing: 1) {
-                Text(TimeFormatting.time(date, in: zone.timeZone))
-                    .font(.system(size: 15, weight: .semibold, design: .rounded))
-                    .monospacedDigit()
+                timeControl
+                    .frame(width: 70, alignment: .trailing)
                 Text(TimeFormatting.dayDescription(zone.timeZone, at: date))
                     .font(.system(size: 10))
                     .foregroundStyle(.secondary)
@@ -347,6 +386,72 @@ private struct TimeZoneRow: View {
         }
         .padding(.horizontal, 16)
         .frame(height: 48)
+    }
+
+    @ViewBuilder
+    private var timeControl: some View {
+        if isEditing {
+            TextField("HH:mm", text: $draft)
+                .textFieldStyle(.plain)
+                .multilineTextAlignment(.trailing)
+                .font(.system(size: 15, weight: .semibold, design: .rounded))
+                .monospacedDigit()
+                .frame(width: 62)
+                .padding(.horizontal, 4)
+                .padding(.vertical, 1)
+                .background(
+                    RoundedRectangle(cornerRadius: 5)
+                        .fill(Color.primary.opacity(0.08))
+                )
+                .overlay(
+                    RoundedRectangle(cornerRadius: 5)
+                        .stroke(
+                            isInvalid ? Color.red : Color.accentColor.opacity(0.8),
+                            lineWidth: 1
+                        )
+                )
+                .focused($isEditingFocused)
+                .onAppear {
+                    isEditingFocused = true
+                }
+                .onSubmit {
+                    submitDraft()
+                }
+                .onChange(of: draft) { _, newValue in
+                    handleDraftChange(newValue)
+                }
+                .onChange(of: isEditingFocused) { _, focused in
+                    if !focused {
+                        finishEditing()
+                    }
+                }
+                .onExitCommand {
+                    cancelEditing()
+                }
+                .help("Enter a 24-hour time, e.g. 20:19")
+                .accessibilityLabel("Time for \(zone.cityName)")
+        } else {
+            Button(action: beginEditing) {
+                Text(TimeFormatting.time(date, in: zone.timeZone))
+                    .font(.system(size: 15, weight: .semibold, design: .rounded))
+                    .monospacedDigit()
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.8)
+                    .padding(.horizontal, 4)
+                    .padding(.vertical, 1)
+                    .background(
+                        RoundedRectangle(cornerRadius: 5)
+                            .fill(Color.primary.opacity(isHoveringTime ? 0.07 : 0))
+                    )
+            }
+            .buttonStyle(.plain)
+            .onHover { hovering in
+                isHoveringTime = hovering
+            }
+            .help("Click to edit this time")
+            .accessibilityLabel("Edit \(zone.cityName) time")
+            .accessibilityValue(TimeFormatting.time(date, in: zone.timeZone))
+        }
     }
 
     @ViewBuilder
@@ -368,6 +473,87 @@ private struct TimeZoneRow: View {
         let offset = TimeFormatting.gmtOffset(zone.timeZone, at: date)
         let difference = TimeFormatting.differenceDescription(zone.timeZone, at: date)
         return "\(offset) · \(difference)"
+    }
+
+    private func beginEditing() {
+        draft = TimeFormatting.editableTime(date, in: zone.timeZone)
+        isInvalid = false
+        isEditing = true
+    }
+
+    private func handleDraftChange(_ newValue: String) {
+        guard isEditing else { return }
+
+        let sanitized = TimeInput.sanitize(newValue)
+        if sanitized != newValue {
+            draft = sanitized
+            return
+        }
+
+        guard TimeInput.isComplete(draft) else {
+            isInvalid = false
+            return
+        }
+
+        if let parsed = TimeInput.parse(draft) {
+            isInvalid = !apply(parsed)
+        } else {
+            isInvalid = true
+        }
+    }
+
+    @discardableResult
+    private func apply(_ value: TimeInput.Value) -> Bool {
+        let current = TimeFormatting.timeComponents(date, in: zone.timeZone)
+        guard value.hour != current.hour || value.minute != current.minute else { return true }
+
+        guard let target = TimeFormatting.date(
+            on: date,
+            atHour: value.hour,
+            minute: value.minute,
+            in: zone.timeZone
+        ) else {
+            return false
+        }
+
+        return onTimeChange(target)
+    }
+
+    private func submitDraft() {
+        guard let parsed = TimeInput.parse(draft) else {
+            isInvalid = true
+            return
+        }
+
+        guard apply(parsed) else {
+            isInvalid = true
+            return
+        }
+
+        draft = TimeInput.format(hour: parsed.hour, minute: parsed.minute)
+        isEditing = false
+        isEditingFocused = false
+        isInvalid = false
+    }
+
+    private func finishEditing() {
+        guard isEditing else { return }
+
+        if let parsed = TimeInput.parse(draft), apply(parsed) {
+            draft = TimeInput.format(hour: parsed.hour, minute: parsed.minute)
+        } else {
+            draft = TimeFormatting.editableTime(date, in: zone.timeZone)
+        }
+
+        isEditing = false
+        isInvalid = false
+    }
+
+    private func cancelEditing() {
+        draft = TimeFormatting.editableTime(date, in: zone.timeZone)
+        isEditing = false
+        isEditingFocused = false
+        isInvalid = false
     }
 }
 

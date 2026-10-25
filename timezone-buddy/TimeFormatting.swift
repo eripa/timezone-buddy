@@ -111,4 +111,135 @@ enum TimeFormatting {
             return difference > 0 ? "+\(difference) days" : "\(difference) days"
         }
     }
+
+    /// The zone's hour and minute at a date, used by the editable clock fields.
+    static func timeComponents(_ date: Date, in timeZone: TimeZone) -> (hour: Int, minute: Int) {
+        var calendar = Calendar.autoupdatingCurrent
+        calendar.timeZone = timeZone
+        let components = calendar.dateComponents([.hour, .minute], from: date)
+        return (components.hour ?? 0, components.minute ?? 0)
+    }
+
+    /// A 24-hour, numeric representation used while editing a clock.
+    static func editableTime(_ date: Date, in timeZone: TimeZone) -> String {
+        let components = timeComponents(date, in: timeZone)
+        return TimeInput.format(hour: components.hour, minute: components.minute)
+    }
+
+    /// Combines a displayed calendar day with a newly entered time in a zone.
+    static func date(
+        on day: Date,
+        atHour hour: Int,
+        minute: Int,
+        in timeZone: TimeZone
+    ) -> Date? {
+        guard (0...23).contains(hour), (0...59).contains(minute) else { return nil }
+
+        var calendar = Calendar.autoupdatingCurrent
+        calendar.timeZone = timeZone
+
+        var components = calendar.dateComponents([.year, .month, .day], from: day)
+        components.hour = hour
+        components.minute = minute
+        components.second = 0
+        components.nanosecond = 0
+
+        guard let target = calendar.date(from: components) else { return nil }
+
+        // Reject times that a daylight-saving transition skipped or moved.
+        let verified = calendar.dateComponents([.hour, .minute], from: target)
+        guard verified.hour == hour, verified.minute == minute else { return nil }
+
+        return target
+    }
+}
+
+/// Parsing and formatting for the numeric clock editors.
+///
+/// Accepts `HH:mm`, `H:mm`, `HHmm`, and `Hmm`. Anything else is rejected, and
+/// hours/minutes must be inside valid clock ranges.
+enum TimeInput {
+    struct Value: Equatable {
+        let hour: Int
+        let minute: Int
+    }
+
+    static func sanitize(_ text: String) -> String {
+        var result = ""
+        var hasColon = false
+
+        for character in text {
+            if character.isNumber {
+                result.append(character)
+            } else if character == ":", !hasColon {
+                result.append(character)
+                hasColon = true
+            }
+        }
+
+        return String(result.prefix(5))
+    }
+
+    static func parse(_ text: String) -> Value? {
+        let trimmed = text.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmed.isEmpty else { return nil }
+
+        let parts = trimmed.split(separator: ":", omittingEmptySubsequences: false)
+
+        if parts.count == 2 {
+            guard !parts[0].isEmpty, !parts[1].isEmpty,
+                  parts[0].count <= 2, parts[1].count <= 2,
+                  let hour = Int(parts[0]), let minute = Int(parts[1]),
+                  (0...23).contains(hour), (0...59).contains(minute) else {
+                return nil
+            }
+            return Value(hour: hour, minute: minute)
+        }
+
+        guard parts.count == 1 else { return nil }
+        let digits = String(parts[0])
+        guard digits.allSatisfy(\.isNumber) else { return nil }
+
+        switch digits.count {
+        case 4:
+            guard let hour = Int(digits.prefix(2)),
+                  let minute = Int(digits.suffix(2)),
+                  (0...23).contains(hour), (0...59).contains(minute) else {
+                return nil
+            }
+            return Value(hour: hour, minute: minute)
+        case 3:
+            guard let hour = Int(digits.prefix(1)),
+                  let minute = Int(digits.suffix(2)),
+                  (0...23).contains(hour), (0...59).contains(minute) else {
+                return nil
+            }
+            return Value(hour: hour, minute: minute)
+        default:
+            return nil
+        }
+    }
+
+    /// True once the input has enough digits to apply live, before the user
+    /// presses Return or leaves the field.
+    static func isComplete(_ text: String) -> Bool {
+        let trimmed = text.trimmingCharacters(in: .whitespacesAndNewlines)
+        let parts = trimmed.split(separator: ":", omittingEmptySubsequences: false)
+
+        if parts.count == 2 {
+            return parts[0].count >= 1
+                && parts[0].count <= 2
+                && parts[1].count == 2
+        }
+
+        return parts.count == 1
+            && trimmed.count == 4
+            && trimmed.allSatisfy(\.isNumber)
+    }
+
+    static func format(hour: Int, minute: Int) -> String {
+        let hourText = hour < 10 ? "0\(hour)" : "\(hour)"
+        let minuteText = minute < 10 ? "0\(minute)" : "\(minute)"
+        return "\(hourText):\(minuteText)"
+    }
 }
