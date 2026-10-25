@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#3A7BD5"/>
+      <stop offset="1" stop-color="#1B3A6B"/>
+    </linearGradient>
+    <linearGradient id="hand" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#FFFFFF"/>
+      <stop offset="1" stop-color="#D8E4F5"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="6" stdDeviation="10" flood-opacity="0.35"/>
+    </filter>
+  </defs>
+
+  <!-- Squircle background (macOS Big Sur+ style) -->
+  <rect x="100" y="100" width="824" height="824" rx="185" ry="185" fill="url(#bg)"/>
+
+  <!-- Subtle inner highlight -->
+  <rect x="100" y="100" width="824" height="824" rx="185" ry="185"
+        fill="none" stroke="#FFFFFF" stroke-opacity="0.15" stroke-width="4"/>
+
+  <!-- Clock face -->
+  <circle cx="512" cy="512" r="290" fill="#0E2344" filter="url(#shadow)"/>
+  <circle cx="512" cy="512" r="290" fill="none" stroke="#FFFFFF" stroke-opacity="0.25" stroke-width="8"/>
+
+  <!-- Hour ticks -->
+  <g stroke="#9FB8DA" stroke-width="10" stroke-linecap="round">
+    <line x1="512" y1="262" x2="512" y2="300"/>
+    <line x1="512" y1="724" x2="512" y2="762"/>
+    <line x1="262" y1="512" x2="300" y2="512"/>
+    <line x1="724" y1="512" x2="762" y2="512"/>
+  </g>
+
+  <!-- "Buddy" arc: two connected globes suggestion (simplified as hand pair) -->
+  <!-- Hour hand -->
+  <line x1="512" y1="512" x2="512" y2="330"
+        stroke="url(#hand)" stroke-width="34" stroke-linecap="round"/>
+  <!-- Minute hand -->
+  <line x1="512" y1="512" x2="660" y2="512"
+        stroke="url(#hand)" stroke-width="24" stroke-linecap="round"/>
+
+  <!-- Center pin -->
+  <circle cx="512" cy="512" r="26" fill="#FFC94A"/>
+
+  <!-- Small "buddy" dot (second timezone marker) -->
+  <circle cx="690" cy="690" r="44" fill="#FFC94A"/>
+  <circle cx="690" cy="690" r="44" fill="none" stroke="#0E2344" stroke-width="8"/>
+  <text x="690" y="708" font-family="-apple-system, Helvetica, Arial" font-size="46"
+        font-weight="700" text-anchor="middle" fill="#0E2344">B</text>
+</svg>
