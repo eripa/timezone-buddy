@@ -96,6 +96,7 @@ private final class SettingsWindowFrontingNSView: NSView {
 
 private struct GeneralSettingsView: View {
     let settings: AppSettings
+    @State private var launchAtLogin = LaunchAtLoginController.shared
 
     private var displayModeBinding: Binding<MenuBarDisplayMode> {
         Binding(
@@ -115,6 +116,13 @@ private struct GeneralSettingsView: View {
         Binding(
             get: { settings.hideDockIcon },
             set: { settings.setHideDockIcon($0) }
+        )
+    }
+
+    private var launchAtLoginBinding: Binding<Bool> {
+        Binding(
+            get: { launchAtLogin.isEnabled },
+            set: { launchAtLogin.setEnabled($0) }
         )
     }
 
@@ -142,6 +150,36 @@ private struct GeneralSettingsView: View {
             }
 
             Section {
+                Toggle("Launch at login", isOn: launchAtLoginBinding)
+
+                if launchAtLogin.requiresApproval {
+                    Label(
+                        "Approve Timezone Buddy in System Settings → General → Login Items.",
+                        systemImage: "exclamationmark.circle"
+                    )
+                    .font(.caption)
+                    .foregroundStyle(.orange)
+
+                    Button("Open Login Items Settings…") {
+                        launchAtLogin.openLoginItemsSettings()
+                    }
+                    .controlSize(.small)
+                }
+
+                if let errorMessage = launchAtLogin.errorMessage {
+                    Text(errorMessage)
+                        .font(.caption)
+                        .foregroundStyle(.red)
+                }
+            } header: {
+                Text("Startup")
+            } footer: {
+                Text("Starts Timezone Buddy in the menu bar when you log in.")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
+
+            Section {
                 Toggle("Hide Dock icon", isOn: hideDockIconBinding)
 
                 Text("Timezone Buddy lives in the menu bar. When the Dock icon is hidden, open Settings from the menu bar panel.")
@@ -152,6 +190,17 @@ private struct GeneralSettingsView: View {
             }
         }
         .formStyle(.grouped)
+        .onAppear {
+            launchAtLogin.refresh()
+        }
+        .task {
+            // Refresh after returning from System Settings or a login.
+            for await _ in NotificationCenter.default.notifications(
+                named: NSApplication.didBecomeActiveNotification
+            ) {
+                launchAtLogin.refresh()
+            }
+        }
     }
 }
 
