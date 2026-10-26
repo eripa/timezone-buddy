@@ -11,16 +11,13 @@ struct AddTimeZoneView: View {
     @State private var searchText = ""
     @FocusState private var isSearchFocused: Bool
 
-    private static let allIdentifiers = TimeZone.knownTimeZoneIdentifiers.sorted()
-
-    private var filteredIdentifiers: [String] {
-        let query = searchText.trimmingCharacters(in: .whitespacesAndNewlines)
-        guard !query.isEmpty else { return Self.allIdentifiers }
-
-        return Self.allIdentifiers.filter { identifier in
-            identifier.localizedCaseInsensitiveContains(query)
-                || Self.cityName(for: identifier).localizedCaseInsensitiveContains(query)
-        }
+    /// Matching zones, best match first.
+    ///
+    /// Zones share names and abbreviations — every Eastern zone answers to
+    /// "EST" — so results are ranked and the user chooses, rather than the
+    /// first row being assumed correct.
+    private var results: [TimeZoneEntry.Match] {
+        TimeZoneEntry.search(searchText)
     }
 
     var body: some View {
@@ -38,28 +35,35 @@ struct AddTimeZoneView: View {
             }
             .padding(16)
 
-            TextField("Search cities, regions, or abbreviations", text: $searchText)
+            TextField("Search cities, regions, names, or abbreviations", text: $searchText)
                 .textFieldStyle(.roundedBorder)
                 .focused($isSearchFocused)
                 .padding(.horizontal, 16)
                 .padding(.bottom, 12)
-                .onSubmit {
-                    addFirstAvailableResult()
-                }
 
             Divider()
 
-            if filteredIdentifiers.isEmpty {
+            if results.isEmpty {
                 ContentUnavailableView(
                     "No Time Zones Found",
                     systemImage: "globe",
-                    description: Text("Try a different city, region, or abbreviation.")
+                    description: Text(
+                        "Try a city, region, time zone name, or abbreviation — such as Calgary, Mountain Time, or MST."
+                    )
                 )
             } else {
-                List(filteredIdentifiers, id: \.self) { identifier in
-                    zoneRow(for: identifier)
+                // A LazyVStack rather than a List: SwiftUI's List is backed by
+                // NSOutlineView, which crashes inside Xcode Previews when it
+                // diffs these rows while the hosting view is being attached.
+                ScrollView {
+                    LazyVStack(spacing: 0) {
+                        ForEach(results) { result in
+                            zoneRow(for: result)
+                        }
+                    }
+                    .padding(.horizontal, 16)
+                    .padding(.vertical, 6)
                 }
-                .listStyle(.inset)
             }
         }
         .frame(width: 440, height: 520)
@@ -68,27 +72,31 @@ struct AddTimeZoneView: View {
         }
     }
 
-    private func addFirstAvailableResult() {
-        let alreadyAdded = Set(settings.zones.map(\.identifier))
-        guard let identifier = filteredIdentifiers.first(where: { !alreadyAdded.contains($0) }) else {
-            return
-        }
-        settings.addZone(identifier: identifier)
-    }
-
-    private func zoneRow(for identifier: String) -> some View {
-        let zone = Self.zone(for: identifier)
-        let isAdded = settings.zones.contains { $0.identifier == identifier }
+    private func zoneRow(for result: TimeZoneEntry.Match) -> some View {
+        let entry = result.entry
+        let isAdded = settings.zones.contains { $0.identifier == entry.identifier }
 
         return Button {
-            settings.addZone(identifier: identifier)
+            settings.addZone(identifier: entry.identifier)
         } label: {
             HStack(spacing: 10) {
                 VStack(alignment: .leading, spacing: 1) {
-                    Text(Self.cityName(for: identifier))
-                        .font(.system(size: 12, weight: .medium))
-                        .lineLimit(1)
-                    Text(identifier)
+                    HStack(spacing: 5) {
+                        Text(entry.cityName)
+                            .font(.system(size: 12, weight: .medium))
+                            .lineLimit(1)
+
+                        if !entry.abbreviationDescription.isEmpty {
+                            Text(entry.abbreviationDescription)
+                                .font(.system(size: 8, weight: .semibold))
+                                .foregroundStyle(.secondary)
+                                .padding(.horizontal, 3)
+                                .padding(.vertical, 1)
+                                .background(.quaternary, in: RoundedRectangle(cornerRadius: 3))
+                        }
+                    }
+
+                    Text(subtitle(for: result))
                         .font(.system(size: 9))
                         .foregroundStyle(.secondary)
                         .lineLimit(1)
@@ -96,7 +104,7 @@ struct AddTimeZoneView: View {
 
                 Spacer()
 
-                Text(TimeFormatting.gmtOffset(zone, at: .now))
+                Text(TimeFormatting.gmtOffset(entry.timeZone, at: .now))
                     .font(.system(size: 10))
                     .foregroundStyle(.secondary)
                     .monospacedDigit()
@@ -105,23 +113,19 @@ struct AddTimeZoneView: View {
                     .font(.system(size: 13))
                     .foregroundStyle(isAdded ? AnyShapeStyle(.green) : AnyShapeStyle(.secondary))
             }
+            .padding(.vertical, 4)
             .contentShape(Rectangle())
-            .padding(.vertical, 2)
         }
         .buttonStyle(.plain)
         .disabled(isAdded)
-        .help(isAdded ? "\(Self.cityName(for: identifier)) is already added" : "Add \(Self.cityName(for: identifier))")
+        .help(isAdded ? "\(entry.cityName) is already added" : "Add \(entry.cityName) — \(entry.displayName)")
     }
 
-    private static func cityName(for identifier: String) -> String {
-        guard let city = identifier.split(separator: "/").last else {
-            return identifier
-        }
-        return city.replacingOccurrences(of: "_", with: " ")
-    }
-
-    private static func zone(for identifier: String) -> TimeZone {
-        TimeZone(identifier: identifier) ?? .current
+    /// The zone's name, prefixed with the alias that found it so a match for
+    /// "Calgary" doesn't look like an unrelated Edmonton row.
+    private func subtitle(for result: TimeZoneEntry.Match) -> String {
+        guard let alias = result.matchedAlias else { return result.entry.displayName }
+        return "\(alias) · \(result.entry.displayName)"
     }
 }
 
