@@ -93,10 +93,54 @@ struct AppSettingsTests {
         #expect(settings.zones.first?.id == firstID)
     }
 
+    @Test
+    func corruptedDataFallsBackToDefaults() throws {
+        let defaults = try makeDefaults()
+        defaults.set(Data("not json".utf8), forKey: AppSettings.storageKey)
+
+        let settings = AppSettings(defaults: defaults)
+
+        #expect(settings.displayMode == .icon)
+        #expect(settings.showEmoji)
+        #expect(settings.hideDockIcon)
+        #expect(settings.timeTravelRangeHours == AppSettings.defaultTimeTravelRangeHours)
+        #expect(settings.zones.count == TimeZoneConfig.defaultZones().count)
+    }
+
+    @Test
+    func invalidAndDuplicateZonesAreDroppedOnLoad() throws {
+        let defaults = try makeDefaults()
+        let valid = TimeZoneConfig(identifier: "Europe/London")
+        let duplicate = TimeZoneConfig(identifier: "Europe/London")
+        let invalid = TimeZoneConfig(identifier: "Not/AZone")
+        let raw = RawSettings(
+            displayMode: .inline,
+            showEmoji: false,
+            hideDockIcon: false,
+            zones: [valid, duplicate, invalid],
+            timeTravelRangeHours: 99
+        )
+        defaults.set(try JSONEncoder().encode(raw), forKey: AppSettings.storageKey)
+
+        let settings = AppSettings(defaults: defaults)
+
+        #expect(settings.displayMode == .inline)
+        #expect(settings.zones.map(\.identifier) == ["Europe/London"])
+        #expect(settings.timeTravelRangeHours == 48)
+    }
+
     private func makeDefaults() throws -> UserDefaults {
         let suiteName = "timezone-buddyTests.\(UUID().uuidString)"
         let defaults = try #require(UserDefaults(suiteName: suiteName))
         defaults.removePersistentDomain(forName: suiteName)
         return defaults
     }
+}
+
+private struct RawSettings: Codable {
+    let displayMode: MenuBarDisplayMode
+    let showEmoji: Bool
+    let hideDockIcon: Bool
+    let zones: [TimeZoneConfig]
+    let timeTravelRangeHours: Int?
 }

@@ -22,6 +22,13 @@ struct TimeZoneConfigTests {
     }
 
     @Test
+    func invalidIdentifierFallsBackToGMT() {
+        let zone = TimeZoneConfig(identifier: "Not/AZone")
+
+        #expect(zone.timeZone.secondsFromGMT(for: .now) == 0)
+    }
+
+    @Test
     func defaultZonesContainUniqueIdentifiers() {
         let zones = TimeZoneConfig.defaultZones()
 

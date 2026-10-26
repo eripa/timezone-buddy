@@ -144,7 +144,9 @@ struct TimeZoneEntry: Identifiable, Hashable {
     var id: String { identifier }
 
     var timeZone: TimeZone {
-        TimeZone(identifier: identifier) ?? .current
+        TimeZone(identifier: identifier)
+            ?? TimeZone(secondsFromGMT: 0)
+            ?? .current
     }
 
     /// "MST/MDT", or "MST" for a zone that doesn't observe daylight saving time.

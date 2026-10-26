@@ -4,6 +4,7 @@
 import AppKit
 import Foundation
 import Observation
+import OSLog
 import SwiftUI
 
 /// How the enabled time zones are presented in the macOS menu bar.
@@ -54,9 +55,11 @@ struct TimeZoneConfig: Identifiable, Codable, Hashable {
         self.isEnabled = isEnabled
     }
 
-    /// The actual time zone, falling back to the current zone if the stored identifier is invalid.
+    /// The actual time zone, falling back to GMT if the stored identifier is invalid.
     var timeZone: TimeZone {
-        TimeZone(identifier: identifier) ?? .current
+        TimeZone(identifier: identifier)
+            ?? TimeZone(secondsFromGMT: 0)
+            ?? .current
     }
 
     /// A friendly city name derived from the identifier, e.g. "America/New_York" -> "New York".
@@ -122,7 +125,11 @@ final class AppSettings {
     private(set) var zones: [TimeZoneConfig]
 
     @ObservationIgnored private let defaults: UserDefaults
-    private static let storageKey = "timezoneBuddy.settings.v1"
+    static let storageKey = "timezoneBuddy.settings.v1"
+    private static let logger = Logger(
+        subsystem: "io.ripa.timezonebuddy",
+        category: "settings"
+    )
 
     private struct StoredSettings: Codable {
         var displayMode: MenuBarDisplayMode
@@ -135,22 +142,53 @@ final class AppSettings {
     init(defaults: UserDefaults = .standard) {
         self.defaults = defaults
 
-        if let data = defaults.data(forKey: Self.storageKey),
-            let stored = try? JSONDecoder().decode(StoredSettings.self, from: data)
-        {
+        guard let data = defaults.data(forKey: Self.storageKey) else {
+            displayMode = .icon
+            showEmoji = true
+            hideDockIcon = true
+            timeTravelRangeHours = Self.defaultTimeTravelRangeHours
+            zones = TimeZoneConfig.defaultZones()
+            return
+        }
+
+        do {
+            let stored = try JSONDecoder().decode(StoredSettings.self, from: data)
             displayMode = stored.displayMode
             showEmoji = stored.showEmoji
             hideDockIcon = stored.hideDockIcon
             timeTravelRangeHours = Self.clampRangeHours(
                 stored.timeTravelRangeHours ?? Self.defaultTimeTravelRangeHours
             )
-            zones = stored.zones
-        } else {
+            zones = Self.sanitizedZones(stored.zones)
+        } catch {
+            Self.logger.error(
+                "Failed to decode settings; using defaults: \(error.localizedDescription, privacy: .public)"
+            )
             displayMode = .icon
             showEmoji = true
             hideDockIcon = true
             timeTravelRangeHours = Self.defaultTimeTravelRangeHours
             zones = TimeZoneConfig.defaultZones()
+        }
+    }
+
+    /// Drops zones that the system cannot resolve and collapses duplicate
+    /// identifiers left behind by older or manually edited preferences.
+    private static func sanitizedZones(_ zones: [TimeZoneConfig]) -> [TimeZoneConfig] {
+        var seen = Set<String>()
+
+        return zones.filter { zone in
+            guard TimeZone(identifier: zone.identifier) != nil else {
+                logger.error("Dropping unknown time zone \(zone.identifier, privacy: .public)")
+                return false
+            }
+
+            guard seen.insert(zone.identifier).inserted else {
+                logger.notice("Dropping duplicate time zone \(zone.identifier, privacy: .public)")
+                return false
+            }
+
+            return true
         }
     }
 
@@ -274,8 +312,14 @@ final class AppSettings {
             zones: zones,
             timeTravelRangeHours: timeTravelRangeHours
         )
-        guard let data = try? JSONEncoder().encode(stored) else { return }
-        defaults.set(data, forKey: Self.storageKey)
+        do {
+            let data = try JSONEncoder().encode(stored)
+            defaults.set(data, forKey: Self.storageKey)
+        } catch {
+            Self.logger.error(
+                "Failed to encode settings: \(error.localizedDescription, privacy: .public)"
+            )
+        }
     }
 
     private static func clampRangeHours(_ hours: Int) -> Int {
