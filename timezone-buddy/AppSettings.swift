@@ -246,6 +246,26 @@ final class AppSettings {
         persist()
     }
 
+    /// Moves one zone one position up or down. Used by the keyboard-accessible
+    /// reorder menu; drag reordering continues to use `applyReorder`.
+    func moveZone(id: UUID, by offset: Int) {
+        guard offset == -1 || offset == 1 else { return }
+        guard let index = zones.firstIndex(where: { $0.id == id }) else { return }
+
+        let newIndex = index + offset
+        guard zones.indices.contains(newIndex) else { return }
+
+        let targetID: UUID?
+        if offset < 0 {
+            targetID = zones[newIndex].id
+        } else {
+            let afterTarget = newIndex + 1
+            targetID = afterTarget < zones.count ? zones[afterTarget].id : nil
+        }
+
+        moveZones([id], before: targetID)
+    }
+
     func persist() {
         let stored = StoredSettings(
             displayMode: displayMode,

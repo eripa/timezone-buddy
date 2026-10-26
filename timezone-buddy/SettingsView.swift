@@ -228,7 +228,7 @@ private struct TimeZonesSettingsView: View {
     var body: some View {
         VStack(spacing: 0) {
             Text(
-                "Drag the handle to reorder. Click a name to relabel that zone — Calgary for Edmonton, say — and leave it empty to use the city name. The emoji box is optional."
+                "Drag the handle to reorder, or use the reorder menu for keyboard access. Click a name to relabel that zone — Calgary for Edmonton, say — and leave it empty to use the city name. The emoji box is optional."
             )
             .font(.caption)
             .foregroundStyle(.secondary)
@@ -239,10 +239,14 @@ private struct TimeZonesSettingsView: View {
 
             ScrollView {
                 LazyVStack(spacing: 0) {
-                    ForEach(settings.zones) { zone in
+                    ForEach(Array(settings.zones.enumerated()), id: \.element.id) { index, zone in
                         VStack(spacing: 0) {
                             TimeZoneSettingsRow(
                                 zone: zone,
+                                canMoveUp: index > 0,
+                                canMoveDown: index < settings.zones.count - 1,
+                                onMoveUp: { settings.moveZone(id: zone.id, by: -1) },
+                                onMoveDown: { settings.moveZone(id: zone.id, by: 1) },
                                 onEnabledChange: { settings.setZoneEnabled(id: zone.id, enabled: $0) },
                                 onEmojiChange: { settings.setZoneEmoji(id: zone.id, emoji: $0) },
                                 onNameChange: { settings.setZoneCustomName(id: zone.id, name: $0) },
@@ -289,6 +293,10 @@ private struct TimeZonesSettingsView: View {
 
 private struct TimeZoneSettingsRow: View {
     let zone: TimeZoneConfig
+    let canMoveUp: Bool
+    let canMoveDown: Bool
+    let onMoveUp: () -> Void
+    let onMoveDown: () -> Void
     let onEnabledChange: (Bool) -> Void
     let onEmojiChange: (String) -> Void
     let onNameChange: (String) -> Void
@@ -364,6 +372,28 @@ private struct TimeZoneSettingsRow: View {
                 .foregroundStyle(.secondary)
                 .frame(width: 74, alignment: .trailing)
             }
+
+            Menu {
+                Button {
+                    onMoveUp()
+                } label: {
+                    Label("Move Up", systemImage: "arrow.up")
+                }
+                .disabled(!canMoveUp)
+
+                Button {
+                    onMoveDown()
+                } label: {
+                    Label("Move Down", systemImage: "arrow.down")
+                }
+                .disabled(!canMoveDown)
+            } label: {
+                Image(systemName: "arrow.up.arrow.down")
+            }
+            .menuStyle(.borderlessButton)
+            .fixedSize()
+            .help("Move \(zone.displayName)")
+            .accessibilityLabel("Reorder \(zone.displayName)")
 
             Button(role: .destructive, action: onDelete) {
                 Image(systemName: "trash")
