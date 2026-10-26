@@ -1,0 +1,60 @@
+name: Bug report
+description: Report a reproducible problem with Timezone Buddy
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to report a bug. Please search existing
+        issues first, and do not include passwords, tokens, or other secrets.
+  - type: input
+    id: macos
+    attributes:
+      label: macOS version
+      placeholder: "e.g. macOS 27.0"
+    validations:
+      required: true
+  - type: input
+    id: app-version
+    attributes:
+      label: Timezone Buddy version and build
+      description: You can find this in Settings → About.
+      placeholder: "e.g. 1.4.0 (7)"
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. Open ...
+        2. Click ...
+        3. See ...
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+    validations:
+      required: true
+  - type: textarea
+    id: extras
+    attributes:
+      label: Screenshots, logs, or additional context
+      description: Drag images here if they help explain the problem.
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Checklist
+      options:
+        - label: I searched existing issues and did not find this bug.
+          required: true
+        - label: This report does not contain secrets or private data.
+          required: true
