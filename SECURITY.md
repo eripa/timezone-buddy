@@ -7,7 +7,7 @@ analytics. Security fixes are made on the latest release line.
 
 | Version | Supported |
 | --- | --- |
-| 1.4.x | Yes |
+| 1.5.x | Yes |
 | Earlier | No |
 
 ## Reporting a Vulnerability

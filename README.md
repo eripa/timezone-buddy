@@ -95,7 +95,8 @@ Or open `timezone-buddy.xcodeproj` in Xcode and press Run.
 
 ### Running tests
 
-The test bundle uses Swift Testing and is hosted by the app:
+The Swift Testing suite covers the models and formatting, and a UI smoke test
+opens the menu bar panel and Settings window:
 
 ```sh
 xcodebuild test -project timezone-buddy.xcodeproj -scheme timezone-buddy \
@@ -117,14 +118,19 @@ xcodebuild test -project timezone-buddy.xcodeproj -scheme timezone-buddy \
 
 | Path | What it does |
 | --- | --- |
-| `timezone-buddy/MyApp.swift` | Entry point, menu bar extra and Settings scene |
+| `timezone-buddy/MyApp.swift` | Entry point, menu bar extra and Settings lifecycle |
 | `timezone-buddy/MenuBarScene.swift` | Menu bar label and the drop-down panel |
 | `timezone-buddy/AddTimeZoneView.swift` | The searchable zone picker |
 | `timezone-buddy/TimeModels.swift` | Clock, time travel, and the searchable zone index |
 | `timezone-buddy/TimeFormatting.swift` | Localized time, day and offset formatting |
 | `timezone-buddy/AppSettings.swift` | Persisted zones and preferences |
 | `timezone-buddy/SettingsView.swift` | Preferences window, including About |
+| `timezone-buddy/SettingsWindowController.swift` | AppKit host for the Settings window |
 | `timezone-buddy/LaunchAtLogin.swift` | Login item handling |
+| `timezone-buddy/Localizable.xcstrings` | String Catalog for user-facing text |
+| `timezone-buddy/PrivacyInfo.xcprivacy` | Privacy manifest |
+| `timezone-buddyTests/` | Swift Testing unit tests |
+| `timezone-buddyUITests/` | XCUIAutomation menu bar and Settings smoke test |
 
 Zone names and abbreviations come from the system's time zone database. The
 hand-written aliases that make `Calgary` and `Florida` work live in
@@ -133,14 +139,21 @@ hand-written aliases that make `Calgary` and `Florida` work live in
 ## Privacy
 
 Timezone Buddy makes no network requests and collects nothing. Your zone list
-and preferences are stored in `UserDefaults` on your Mac.
+and preferences are stored in `UserDefaults` on your Mac. The bundled
+`PrivacyInfo.xcprivacy` declares that use.
+
+## Localization
+
+User-facing strings live in `timezone-buddy/Localizable.xcstrings`. German is
+included; add more languages in Xcode's String Catalog editor. Translations use
+stable keys and the English source strings.
 
 ## Contributing
 
 Contributions are welcome. Read [CONTRIBUTING.md](CONTRIBUTING.md) and
 [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md) before opening a pull request. For
 security-sensitive reports, use [SECURITY.md](SECURITY.md) rather than a public
-issue.
+issue. Release history is in [CHANGELOG.md](CHANGELOG.md).
 
 ## License
 

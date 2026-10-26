@@ -18,20 +18,20 @@ From the repository root:
 xcodebuild build -project timezone-buddy.xcodeproj -scheme timezone-buddy \
   -destination 'platform=macOS'
 
-# Run the Swift Testing suite (hosted by the app)
+# Run the Swift Testing and UI test suites (hosted by the app)
 xcodebuild test -project timezone-buddy.xcodeproj -scheme timezone-buddy \
   -destination 'platform=macOS'
 
 # Check formatting
 xcrun swift-format lint --strict --configuration .swift-format \
-  --recursive timezone-buddy timezone-buddyTests
+  --recursive timezone-buddy timezone-buddyTests timezone-buddyUITests
 ```
 
 To fix formatting, run the formatter instead of editing whitespace by hand:
 
 ```sh
 xcrun swift-format format --in-place --configuration .swift-format \
-  --recursive timezone-buddy timezone-buddyTests
+  --recursive timezone-buddy timezone-buddyTests timezone-buddyUITests
 ```
 
 Or open `timezone-buddy.xcodeproj` in Xcode and press Run.
@@ -43,8 +43,13 @@ Or open `timezone-buddy.xcodeproj` in Xcode and press Run.
 - Put a test for new behavior in the same pull request as the behavior.
 - Date and time logic is the most bug-prone part of the app. Cover DST gaps,
   half-hour offsets, date-line changes, and time-travel bounds when relevant.
-- UI tests are optional and use XCUIAutomation. Menu bar extra tests are
-  inherently flaky, so prefer a focused unit test where possible.
+- UI tests live in `timezone-buddyUITests` and use XCUIAutomation. Keep the
+  smoke test focused on the menu bar panel and Settings window.
+- User-facing strings live in `timezone-buddy/Localizable.xcstrings`; add
+  translations through the String Catalog in Xcode rather than hard-coding
+  localized copies in views.
+- UI tests are optional for small changes but should be updated when a change
+  alters the menu bar panel or Settings window.
 
 ## Code style
 

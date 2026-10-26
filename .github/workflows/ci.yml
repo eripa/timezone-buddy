@@ -32,7 +32,7 @@ jobs:
       - name: Lint Swift formatting
         run: >-
           xcrun swift-format lint --strict --configuration .swift-format
-          --recursive timezone-buddy timezone-buddyTests
+          --recursive timezone-buddy timezone-buddyTests timezone-buddyUITests
 
       - name: Build
         run: >-
