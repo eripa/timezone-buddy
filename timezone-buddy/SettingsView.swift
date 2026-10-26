@@ -8,6 +8,7 @@ import SwiftUI
 enum SettingsPane: String {
     case general
     case timeZones
+    case about
 }
 
 /// The preferences window for Timezone Buddy.
@@ -26,6 +27,10 @@ struct SettingsView: View {
 
             Tab("Time Zones", systemImage: "globe", value: SettingsPane.timeZones) {
                 TimeZonesSettingsView(settings: settings)
+            }
+
+            Tab("About", systemImage: "info.circle", value: SettingsPane.about) {
+                AboutSettingsView()
             }
         }
         .frame(width: 580, height: 460)
@@ -396,11 +401,61 @@ private struct DragHandle: View {
     }
 }
 
+// MARK: - About
+
+/// Mirrors the standard About panel, which is otherwise reachable only from
+/// the app menu — and that menu is gone while the Dock icon is hidden.
+private struct AboutSettingsView: View {
+    private var versionDescription: String {
+        let info = Bundle.main.infoDictionary
+        let shortVersion = info?["CFBundleShortVersionString"] as? String ?? "—"
+        let build = info?["CFBundleVersion"] as? String ?? "—"
+        return "Version \(shortVersion) (\(build))"
+    }
+
+    /// Read from the bundle so the line stays in step with the project's
+    /// `NSHumanReadableCopyright` setting.
+    private var copyright: String? {
+        Bundle.main.infoDictionary?["NSHumanReadableCopyright"] as? String
+    }
+
+    var body: some View {
+        VStack(spacing: 4) {
+            Image(nsImage: NSApp.applicationIconImage)
+                .resizable()
+                .interpolation(.high)
+                .frame(width: 128, height: 128)
+                .accessibilityHidden(true)
+
+            Text("Timezone Buddy")
+                .font(.system(size: 24, weight: .semibold))
+                .padding(.top, 12)
+
+            Text(versionDescription)
+                .font(.system(size: 11))
+                .foregroundStyle(.secondary)
+
+            if let copyright {
+                Text(copyright)
+                    .font(.system(size: 9))
+                    .foregroundStyle(.tertiary)
+                    .padding(.top, 12)
+            }
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+    }
+}
+
 #Preview("Settings") {
     SettingsView(settings: AppSettings())
 }
 
 #Preview("Time Zones") {
     TimeZonesSettingsView(settings: AppSettings())
+        .frame(width: 580, height: 460)
+}
+
+#Preview("About") {
+    AboutSettingsView()
         .frame(width: 580, height: 460)
 }
