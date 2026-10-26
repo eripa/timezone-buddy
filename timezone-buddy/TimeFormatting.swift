@@ -188,9 +188,10 @@ enum TimeInput {
 
         if parts.count == 2 {
             guard !parts[0].isEmpty, !parts[1].isEmpty,
-                  parts[0].count <= 2, parts[1].count <= 2,
-                  let hour = Int(parts[0]), let minute = Int(parts[1]),
-                  (0...23).contains(hour), (0...59).contains(minute) else {
+                parts[0].count <= 2, parts[1].count <= 2,
+                let hour = Int(parts[0]), let minute = Int(parts[1]),
+                (0...23).contains(hour), (0...59).contains(minute)
+            else {
                 return nil
             }
             return Value(hour: hour, minute: minute)
@@ -203,15 +204,17 @@ enum TimeInput {
         switch digits.count {
         case 4:
             guard let hour = Int(digits.prefix(2)),
-                  let minute = Int(digits.suffix(2)),
-                  (0...23).contains(hour), (0...59).contains(minute) else {
+                let minute = Int(digits.suffix(2)),
+                (0...23).contains(hour), (0...59).contains(minute)
+            else {
                 return nil
             }
             return Value(hour: hour, minute: minute)
         case 3:
             guard let hour = Int(digits.prefix(1)),
-                  let minute = Int(digits.suffix(2)),
-                  (0...23).contains(hour), (0...59).contains(minute) else {
+                let minute = Int(digits.suffix(2)),
+                (0...23).contains(hour), (0...59).contains(minute)
+            else {
                 return nil
             }
             return Value(hour: hour, minute: minute)

@@ -93,7 +93,7 @@ struct TimeZoneConfig: Identifiable, Codable, Hashable {
         let presets = [
             ("America/New_York", "🇺🇸"),
             ("Europe/London", "🇬🇧"),
-            ("Asia/Tokyo", "🇯🇵")
+            ("Asia/Tokyo", "🇯🇵"),
         ]
 
         for (identifier, emoji) in presets where identifier != localIdentifier {
@@ -136,7 +136,8 @@ final class AppSettings {
         self.defaults = defaults
 
         if let data = defaults.data(forKey: Self.storageKey),
-           let stored = try? JSONDecoder().decode(StoredSettings.self, from: data) {
+            let stored = try? JSONDecoder().decode(StoredSettings.self, from: data)
+        {
             displayMode = stored.displayMode
             showEmoji = stored.showEmoji
             hideDockIcon = stored.hideDockIcon
@@ -235,9 +236,10 @@ final class AppSettings {
         guard !moving.isEmpty else { return }
 
         var remaining = zones.filter { !ids.contains($0.id) }
-        let insertionIndex = targetID.flatMap { id in
-            remaining.firstIndex { $0.id == id }
-        } ?? remaining.count
+        let insertionIndex =
+            targetID.flatMap { id in
+                remaining.firstIndex { $0.id == id }
+            } ?? remaining.count
 
         remaining.insert(contentsOf: moving, at: insertionIndex)
         zones = remaining

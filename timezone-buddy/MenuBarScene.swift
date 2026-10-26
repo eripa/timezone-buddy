@@ -536,12 +536,14 @@ private struct TimeZoneRow: View {
         let current = TimeFormatting.timeComponents(date, in: zone.timeZone)
         guard value.hour != current.hour || value.minute != current.minute else { return true }
 
-        guard let target = TimeFormatting.date(
-            on: date,
-            atHour: value.hour,
-            minute: value.minute,
-            in: zone.timeZone
-        ) else {
+        guard
+            let target = TimeFormatting.date(
+                on: date,
+                atHour: value.hour,
+                minute: value.minute,
+                in: zone.timeZone
+            )
+        else {
             return false
         }
 
@@ -604,4 +606,3 @@ private struct TimeZoneRow: View {
         }()
     )
 }
-
