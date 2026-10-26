@@ -18,9 +18,20 @@ final class ClockModel {
     init() {
         ticker = Task { [weak self] in
             while !Task.isCancelled {
-                try? await Task.sleep(for: .seconds(1))
-                guard !Task.isCancelled, let self else { return }
-                self.now = .now
+                guard let self else { return }
+
+                let current = Date.now
+                self.now = current
+
+                // Every surface shows hours and minutes only, so wake on the
+                // next minute boundary instead of once a second.
+                let secondsIntoMinute = current.timeIntervalSinceReferenceDate
+                    .truncatingRemainder(dividingBy: 60)
+
+                try? await Task.sleep(
+                    for: .seconds(60 - secondsIntoMinute),
+                    tolerance: .seconds(0.2)
+                )
             }
         }
     }

@@ -57,10 +57,6 @@ struct AddTimeZoneView: View {
                 )
             } else {
                 List(filteredIdentifiers, id: \.self) { identifier in
-                    // Workaround for an Xcode preview crash with custom List rows on macOS.
-                    #if DEBUG
-                    AnyView(EmptyView())
-                    #endif
                     zoneRow(for: identifier)
                 }
                 .listStyle(.inset)

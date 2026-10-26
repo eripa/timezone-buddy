@@ -4,21 +4,29 @@
 import AppKit
 import SwiftUI
 
+/// The panes shown in the Settings window.
+enum SettingsPane: String {
+    case general
+    case timeZones
+}
+
 /// The preferences window for Timezone Buddy.
 struct SettingsView: View {
     let settings: AppSettings
 
-    var body: some View {
-        TabView {
-            GeneralSettingsView(settings: settings)
-                .tabItem {
-                    Label("General", systemImage: "gearshape")
-                }
+    /// Reopens the pane people used last, which the HIG recommends for
+    /// settings windows with more than one pane.
+    @AppStorage("timezoneBuddy.settingsPane") private var selectedPane: SettingsPane = .general
 
-            TimeZonesSettingsView(settings: settings)
-                .tabItem {
-                    Label("Time Zones", systemImage: "globe")
-                }
+    var body: some View {
+        TabView(selection: $selectedPane) {
+            Tab("General", systemImage: "gearshape", value: SettingsPane.general) {
+                GeneralSettingsView(settings: settings)
+            }
+
+            Tab("Time Zones", systemImage: "globe", value: SettingsPane.timeZones) {
+                TimeZonesSettingsView(settings: settings)
+            }
         }
         .frame(width: 580, height: 460)
         .background(SettingsWindowFrontingView())
@@ -220,27 +228,31 @@ private struct TimeZonesSettingsView: View {
                 .padding(.top, 12)
                 .padding(.bottom, 8)
 
-            List {
-                ForEach(settings.zones) { zone in
-                    // Workaround for an Xcode preview crash with custom List rows on macOS.
-                    #if DEBUG
-                    AnyView(EmptyView())
-                    #endif
-                    TimeZoneSettingsRow(
-                        zone: zone,
-                        onEnabledChange: { settings.setZoneEnabled(id: zone.id, enabled: $0) },
-                        onEmojiChange: { settings.setZoneEmoji(id: zone.id, emoji: $0) },
-                        onDelete: { settings.removeZone(id: zone.id) }
-                    )
+            ScrollView {
+                LazyVStack(spacing: 0) {
+                    ForEach(settings.zones) { zone in
+                        VStack(spacing: 0) {
+                            TimeZoneSettingsRow(
+                                zone: zone,
+                                onEnabledChange: { settings.setZoneEnabled(id: zone.id, enabled: $0) },
+                                onEmojiChange: { settings.setZoneEmoji(id: zone.id, emoji: $0) },
+                                onDelete: { settings.removeZone(id: zone.id) }
+                            )
+                            .padding(.horizontal, 16)
+
+                            if zone.id != settings.zones.last?.id {
+                                Divider()
+                                    .padding(.leading, 64)
+                            }
+                        }
+                    }
+                    .reorderable()
                 }
-                .onMove { source, destination in
-                    settings.moveZones(fromOffsets: source, toOffset: destination)
-                }
-                .onDelete { offsets in
-                    settings.removeZones(atOffsets: offsets)
-                }
+                .padding(.vertical, 4)
             }
-            .listStyle(.inset)
+            .reorderContainer(for: TimeZoneConfig.self) { difference in
+                settings.applyReorder(difference)
+            }
 
             Divider()
 
@@ -300,7 +312,7 @@ private struct TimeZoneSettingsRow: View {
                 .multilineTextAlignment(.center)
                 .font(.system(size: 16))
                 .frame(width: 30, height: 24)
-                .background(Color.primary.opacity(0.06), in: RoundedRectangle(cornerRadius: 6))
+                .background(.quaternary, in: RoundedRectangle(cornerRadius: 6))
                 .help("Optional emoji or flag for this zone")
                 .accessibilityLabel("Emoji for \(zone.cityName)")
 
@@ -334,7 +346,7 @@ private struct TimeZoneSettingsRow: View {
             .help("Remove \(zone.cityName)")
             .accessibilityLabel("Remove \(zone.cityName)")
         }
-        .padding(.vertical, 3)
+        .padding(.vertical, 6)
         .opacity(zone.isEnabled ? 1 : 0.6)
     }
 }
