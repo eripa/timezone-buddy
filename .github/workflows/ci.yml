@@ -1,0 +1,47 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-and-test:
+    # GitHub-hosted Xcode 27 image (arm64).
+    runs-on: xcode-27
+    timeout-minutes: 20
+
+    steps:
+      - name: Check out
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          persist-credentials: false
+
+      - name: Show toolchain
+        run: xcodebuild -version
+
+      - name: Lint Swift formatting
+        run: >-
+          xcrun swift-format lint --strict --configuration .swift-format
+          --recursive timezone-buddy timezone-buddyTests
+
+      - name: Build
+        run: >-
+          xcodebuild build -quiet -project timezone-buddy.xcodeproj
+          -scheme timezone-buddy -destination 'platform=macOS'
+          -derivedDataPath "$RUNNER_TEMP/DerivedData"
+
+      - name: Test
+        run: >-
+          xcodebuild test -quiet -project timezone-buddy.xcodeproj
+          -scheme timezone-buddy -destination 'platform=macOS'
+          -derivedDataPath "$RUNNER_TEMP/DerivedData"

@@ -7,6 +7,11 @@
 <p align="center">The time in the places you care about, one click away in the menu bar.</p>
 
 <p align="center">
+  <a href="https://github.com/eripa/timezone-buddy/actions/workflows/ci.yml"><img src="https://github.com/eripa/timezone-buddy/actions/workflows/ci.yml/badge.svg" alt="CI status"></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/license-GPL--3.0--or--later-blue.svg" alt="GPL-3.0-or-later"></a>
+</p>
+
+<p align="center">
   <img src="docs/menu-bar-panel.png" width="380" alt="The Timezone Buddy drop-down panel showing Vancouver, New York, Leeds and Tokyo">
 </p>
 
@@ -129,6 +134,13 @@ hand-written aliases that make `Calgary` and `Florida` work live in
 
 Timezone Buddy makes no network requests and collects nothing. Your zone list
 and preferences are stored in `UserDefaults` on your Mac.
+
+## Contributing
+
+Contributions are welcome. Read [CONTRIBUTING.md](CONTRIBUTING.md) and
+[CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md) before opening a pull request. For
+security-sensitive reports, use [SECURITY.md](SECURITY.md) rather than a public
+issue.
 
 ## License
 
