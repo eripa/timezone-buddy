@@ -27,10 +27,6 @@ struct TimezoneBuddyApp: App {
             )
         }
         .menuBarExtraStyle(.window)
-
-        Settings {
-            SettingsView(settings: settings)
-        }
     }
 }
 
@@ -50,12 +46,9 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 
     /// Reopening the app (for example by clicking its Dock icon) shows Settings,
     /// since there is no main window to bring forward.
-    ///
-    /// SwiftUI's Settings scene doesn't expose an AppKit API for this, so the
-    /// menu-bar-only app uses the conventional `showSettingsWindow:` action.
     func applicationShouldHandleReopen(_ sender: NSApplication, hasVisibleWindows flag: Bool) -> Bool {
         if !flag {
-            sender.sendAction(Selector(("showSettingsWindow:")), to: nil, from: nil)
+            SettingsWindowController.shared.show()
         }
         return true
     }

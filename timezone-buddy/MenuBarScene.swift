@@ -65,7 +65,6 @@ struct MenuBarPanel: View {
     let clock: ClockModel
     @Bindable var timeTravel: TimeTravelState
 
-    @Environment(\.openSettings) private var openSettings
     @State private var resetRotation: Double = 0
 
     private var previewDate: Date {
@@ -214,7 +213,7 @@ struct MenuBarPanel: View {
             Text("No time zones selected")
                 .font(.system(size: 12, weight: .medium))
             Button("Choose Time Zones…") {
-                openSettingsWindow()
+                SettingsWindowController.shared.show()
             }
             .controlSize(.small)
         }
@@ -345,7 +344,7 @@ struct MenuBarPanel: View {
     private var footer: some View {
         HStack(spacing: 12) {
             Button {
-                openSettingsWindow()
+                SettingsWindowController.shared.show()
             } label: {
                 Label("Settings…", systemImage: "gearshape")
             }
@@ -361,11 +360,6 @@ struct MenuBarPanel: View {
         .foregroundStyle(.secondary)
         .padding(.horizontal, 16)
         .padding(.vertical, 10)
-    }
-
-    private func openSettingsWindow() {
-        openSettings()
-        SettingsWindowPresenter.bringToFrontWhenAvailable()
     }
 }
 
