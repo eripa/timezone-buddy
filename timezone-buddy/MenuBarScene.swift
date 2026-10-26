@@ -388,7 +388,7 @@ private struct TimeZoneRow: View {
                 .frame(width: 28)
 
             VStack(alignment: .leading, spacing: 1) {
-                Text(zone.cityName)
+                Text(zone.displayName)
                     .font(.system(size: 13, weight: .medium))
                     .lineLimit(1)
                 Text(subtitle)
@@ -449,7 +449,7 @@ private struct TimeZoneRow: View {
                     cancelEditing()
                 }
                 .help("Enter a 24-hour time, e.g. 20:19")
-                .accessibilityLabel("Time for \(zone.cityName)")
+                .accessibilityLabel("Time for \(zone.displayName)")
         } else {
             Button(action: beginEditing) {
                 Text(TimeFormatting.time(date, in: zone.timeZone))
@@ -471,7 +471,7 @@ private struct TimeZoneRow: View {
                 isHoveringTime = hovering
             }
             .help("Click to edit this time")
-            .accessibilityLabel("Edit \(zone.cityName) time")
+            .accessibilityLabel("Edit \(zone.displayName) time")
             .accessibilityValue(TimeFormatting.time(date, in: zone.timeZone))
         }
     }
@@ -488,13 +488,20 @@ private struct TimeZoneRow: View {
         }
     }
 
+    /// Offset and day information, prefixed with the reference city when the
+    /// zone is shown under a custom name — otherwise "Leeds" would hide the
+    /// fact that the row is really London.
     private var subtitle: String {
+        let detail: String
         if zone.identifier == TimeZone.autoupdatingCurrent.identifier {
-            return "Your time zone"
+            detail = "Your time zone"
+        } else {
+            let offset = TimeFormatting.gmtOffset(zone.timeZone, at: date)
+            let difference = TimeFormatting.differenceDescription(zone.timeZone, at: date)
+            detail = "\(offset) · \(difference)"
         }
-        let offset = TimeFormatting.gmtOffset(zone.timeZone, at: date)
-        let difference = TimeFormatting.differenceDescription(zone.timeZone, at: date)
-        return "\(offset) · \(difference)"
+
+        return zone.hasCustomName ? "\(zone.cityName) · \(detail)" : detail
     }
 
     private func beginEditing() {

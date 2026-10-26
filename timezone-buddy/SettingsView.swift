@@ -220,7 +220,7 @@ private struct TimeZonesSettingsView: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            Text("Drag to reorder. Each zone can have an optional emoji, such as a flag; leave the box empty for none.")
+            Text("Drag the handle to reorder. Click a name to relabel that zone — Calgary for Edmonton, say — and leave it empty to use the city name. The emoji box is optional.")
                 .font(.caption)
                 .foregroundStyle(.secondary)
                 .frame(maxWidth: .infinity, alignment: .leading)
@@ -236,13 +236,14 @@ private struct TimeZonesSettingsView: View {
                                 zone: zone,
                                 onEnabledChange: { settings.setZoneEnabled(id: zone.id, enabled: $0) },
                                 onEmojiChange: { settings.setZoneEmoji(id: zone.id, emoji: $0) },
+                                onNameChange: { settings.setZoneCustomName(id: zone.id, name: $0) },
                                 onDelete: { settings.removeZone(id: zone.id) }
                             )
                             .padding(.horizontal, 16)
 
                             if zone.id != settings.zones.last?.id {
                                 Divider()
-                                    .padding(.leading, 64)
+                                    .padding(.leading, 86)
                             }
                         }
                     }
@@ -281,6 +282,7 @@ private struct TimeZoneSettingsRow: View {
     let zone: TimeZoneConfig
     let onEnabledChange: (Bool) -> Void
     let onEmojiChange: (String) -> Void
+    let onNameChange: (String) -> Void
     let onDelete: () -> Void
 
     private var enabledBinding: Binding<Bool> {
@@ -300,8 +302,19 @@ private struct TimeZoneSettingsRow: View {
         )
     }
 
+    /// Edits the custom name directly. The field is empty when the zone still
+    /// uses its city name, so the city shows as the placeholder.
+    private var customNameBinding: Binding<String> {
+        Binding(
+            get: { zone.customName ?? "" },
+            set: onNameChange
+        )
+    }
+
     var body: some View {
         HStack(spacing: 10) {
+            DragHandle()
+
             Toggle("Show in menu bar", isOn: enabledBinding)
                 .labelsHidden()
                 .toggleStyle(.checkbox)
@@ -314,12 +327,16 @@ private struct TimeZoneSettingsRow: View {
                 .frame(width: 30, height: 24)
                 .background(.quaternary, in: RoundedRectangle(cornerRadius: 6))
                 .help("Optional emoji or flag for this zone")
-                .accessibilityLabel("Emoji for \(zone.cityName)")
+                .accessibilityLabel("Emoji for \(zone.displayName)")
 
             VStack(alignment: .leading, spacing: 1) {
-                Text(zone.cityName)
+                TextField("", text: customNameBinding, prompt: Text(zone.cityName))
+                    .textFieldStyle(.plain)
                     .font(.system(size: 13, weight: .medium))
                     .lineLimit(1)
+                    .help("Optional name, shown instead of \(zone.cityName)")
+                    .accessibilityLabel("Name for \(zone.cityName)")
+
                 Text(zone.identifier)
                     .font(.system(size: 9))
                     .foregroundStyle(.secondary)
@@ -343,11 +360,39 @@ private struct TimeZoneSettingsRow: View {
                 Image(systemName: "trash")
             }
             .buttonStyle(.borderless)
-            .help("Remove \(zone.cityName)")
-            .accessibilityLabel("Remove \(zone.cityName)")
+            .help("Remove \(zone.displayName)")
+            .accessibilityLabel("Remove \(zone.displayName)")
         }
         .padding(.vertical, 6)
         .opacity(zone.isEnabled ? 1 : 0.6)
+    }
+}
+
+/// The classic six-dot grip at the leading edge of a reorderable row.
+///
+/// SF Symbols has no two-by-three dot grid, so the dots are drawn directly.
+/// The handle carries no gesture of its own — `reorderable()` starts its drag
+/// anywhere in the row — so this only marks where to grab.
+private struct DragHandle: View {
+    private static let rowCount = 3
+    private static let dotSize: CGFloat = 2.5
+
+    var body: some View {
+        Grid(horizontalSpacing: 3, verticalSpacing: 3) {
+            ForEach(0..<Self.rowCount, id: \.self) { _ in
+                GridRow {
+                    ForEach(0..<2, id: \.self) { _ in
+                        Circle()
+                            .fill(.secondary)
+                            .frame(width: Self.dotSize, height: Self.dotSize)
+                    }
+                }
+            }
+        }
+        .frame(width: 12, height: 18)
+        .contentShape(Rectangle())
+        .help("Drag to reorder")
+        .accessibilityHidden(true)
     }
 }
 

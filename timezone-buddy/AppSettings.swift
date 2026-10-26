@@ -36,16 +36,21 @@ struct TimeZoneConfig: Identifiable, Codable, Hashable {
     var identifier: String
     var emoji: String
     var isEnabled: Bool
+    /// An optional name shown instead of the reference city, e.g. "Leeds" for
+    /// `Europe/London`. Stored exactly as typed; `displayName` trims it.
+    var customName: String?
 
     init(
         id: UUID = UUID(),
         identifier: String,
         emoji: String = "",
+        customName: String? = nil,
         isEnabled: Bool = true
     ) {
         self.id = id
         self.identifier = identifier
         self.emoji = emoji
+        self.customName = customName
         self.isEnabled = isEnabled
     }
 
@@ -56,10 +61,23 @@ struct TimeZoneConfig: Identifiable, Codable, Hashable {
 
     /// A friendly city name derived from the identifier, e.g. "America/New_York" -> "New York".
     var cityName: String {
-        guard let city = identifier.split(separator: "/").last else {
-            return identifier
-        }
-        return city.replacingOccurrences(of: "_", with: " ")
+        TimeZoneEntry.cityName(for: identifier)
+    }
+
+    /// The trimmed custom name, or an empty string when none is set.
+    private var trimmedCustomName: String {
+        (customName ?? "").trimmingCharacters(in: .whitespacesAndNewlines)
+    }
+
+    /// What to show for this zone: the custom name when there is one,
+    /// otherwise the reference city.
+    var displayName: String {
+        trimmedCustomName.isEmpty ? cityName : trimmedCustomName
+    }
+
+    /// True when the zone is shown under a name other than its reference city.
+    var hasCustomName: Bool {
+        !trimmedCustomName.isEmpty
     }
 
     /// The emoji without surrounding whitespace, or an empty string when none is set.
@@ -170,6 +188,15 @@ final class AppSettings {
 
     func setZoneEmoji(id: UUID, emoji: String) {
         updateZone(id: id) { $0.emoji = emoji }
+    }
+
+    /// Sets the name shown instead of the reference city. An empty string
+    /// clears it, so the city name comes back.
+    ///
+    /// The text is stored untrimmed on purpose: trimming on every keystroke
+    /// would eat the space the moment someone types "New ".
+    func setZoneCustomName(id: UUID, name: String) {
+        updateZone(id: id) { $0.customName = name.isEmpty ? nil : name }
     }
 
     func addZone(identifier: String, emoji: String = "") {
