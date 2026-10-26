@@ -34,6 +34,20 @@
                ReferencedContainer = "container:timezone-buddy.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "NO"
+            buildForProfiling = "NO"
+            buildForArchiving = "NO"
+            buildForAnalyzing = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "0751A3F33090124D00D3DD29"
+               BuildableName = "timezone-buddyUITests.xctest"
+               BlueprintName = "timezone-buddyUITests"
+               ReferencedContainer = "container:timezone-buddy.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
       </BuildActionEntries>
    </BuildAction>
    <TestAction
@@ -51,6 +65,17 @@
                BlueprintIdentifier = "0751A2E5309003F700D3DD29"
                BuildableName = "timezone-buddyTests.xctest"
                BlueprintName = "timezone-buddyTests"
+               ReferencedContainer = "container:timezone-buddy.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO"
+            parallelizable = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "0751A3F33090124D00D3DD29"
+               BuildableName = "timezone-buddyUITests.xctest"
+               BlueprintName = "timezone-buddyUITests"
                ReferencedContainer = "container:timezone-buddy.xcodeproj">
             </BuildableReference>
          </TestableReference>

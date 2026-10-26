@@ -14,11 +14,19 @@
 			remoteGlobalIDString = 000000000000000100000000;
 			remoteInfo = "timezone-buddy";
 		};
+		0751A3FB3090124D00D3DD29 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 000000000000000000000000 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 000000000000000100000000;
+			remoteInfo = "timezone-buddy";
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		000000000000000000000120 /* Timezone Buddy.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Timezone Buddy.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		0751A2E6309003F700D3DD29 /* timezone-buddyTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "timezone-buddyTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		0751A3F43090124D00D3DD29 /* timezone-buddyUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "timezone-buddyUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -30,6 +38,11 @@
 		0751A2E7309003F700D3DD29 /* timezone-buddyTests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = "timezone-buddyTests";
+			sourceTree = "<group>";
+		};
+		0751A3F53090124D00D3DD29 /* timezone-buddyUITests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = "timezone-buddyUITests";
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -45,6 +58,11 @@
 			files = (
 			);
 		};
+		0751A3F13090124D00D3DD29 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			files = (
+			);
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -53,6 +71,7 @@
 			children = (
 				000000000000000000000010 /* timezone-buddy */,
 				0751A2E7309003F700D3DD29 /* timezone-buddyTests */,
+				0751A3F53090124D00D3DD29 /* timezone-buddyUITests */,
 				000000000000000000000020 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -62,6 +81,7 @@
 			children = (
 				000000000000000000000120 /* Timezone Buddy.app */,
 				0751A2E6309003F700D3DD29 /* timezone-buddyTests.xctest */,
+				0751A3F43090124D00D3DD29 /* timezone-buddyUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -108,6 +128,27 @@
 			productReference = 0751A2E6309003F700D3DD29 /* timezone-buddyTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
+		0751A3F33090124D00D3DD29 /* timezone-buddyUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 0751A3F83090124D00D3DD29 /* Build configuration list for PBXNativeTarget "timezone-buddyUITests" */;
+			buildPhases = (
+				0751A3F03090124D00D3DD29 /* Sources */,
+				0751A3F13090124D00D3DD29 /* Frameworks */,
+				0751A3F23090124D00D3DD29 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				0751A3FC3090124D00D3DD29 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				0751A3F53090124D00D3DD29 /* timezone-buddyUITests */,
+			);
+			name = "timezone-buddyUITests";
+			productName = "timezone-buddyUITests";
+			productReference = 0751A3F43090124D00D3DD29 /* timezone-buddyUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -125,6 +166,9 @@
 					0751A2E5309003F700D3DD29 = {
 						CreatedOnToolsVersion = 27.0;
 					};
+					0751A3F33090124D00D3DD29 = {
+						CreatedOnToolsVersion = 27.0;
+					};
 				};
 			};
 			buildConfigurationList = 000000000000000010000000 /* Build configuration list for PBXProject "timezone-buddy" */;
@@ -132,6 +176,7 @@
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
+				de,
 				Base,
 			);
 			mainGroup = 000000000000000000000001;
@@ -143,6 +188,7 @@
 			targets = (
 				000000000000000100000000 /* timezone-buddy */,
 				0751A2E5309003F700D3DD29 /* timezone-buddyTests */,
+				0751A3F33090124D00D3DD29 /* timezone-buddyUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -154,6 +200,11 @@
 			);
 		};
 		0751A2E4309003F700D3DD29 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			files = (
+			);
+		};
+		0751A3F23090124D00D3DD29 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			files = (
 			);
@@ -171,6 +222,11 @@
 			files = (
 			);
 		};
+		0751A3F03090124D00D3DD29 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			files = (
+			);
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -178,6 +234,11 @@
 			isa = PBXTargetDependency;
 			target = 000000000000000100000000 /* timezone-buddy */;
 			targetProxy = 0751A2F0309003F700D3DD29 /* PBXContainerItemProxy */;
+		};
+		0751A3FC3090124D00D3DD29 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 000000000000000100000000 /* timezone-buddy */;
+			targetProxy = 0751A3FB3090124D00D3DD29 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -236,7 +297,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
-				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MACOSX_DEPLOYMENT_TARGET = 27.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -294,7 +355,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
-				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MACOSX_DEPLOYMENT_TARGET = 27.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
@@ -422,6 +483,56 @@
 			};
 			name = Release;
 		};
+		0751A3F93090124D00D3DD29 /* Debug configuration for PBXNativeTarget "timezone-buddyUITests" */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 27.0;
+				MACOSX_DEPLOYMENT_TARGET = 27.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = io.ripa.timezonebuddyUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SUPPORTED_PLATFORMS = macosx;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2,7";
+				TEST_TARGET_NAME = "timezone-buddy";
+				XROS_DEPLOYMENT_TARGET = 27.0;
+			};
+			name = Debug;
+		};
+		0751A3FA3090124D00D3DD29 /* Release configuration for PBXNativeTarget "timezone-buddyUITests" */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 27.0;
+				MACOSX_DEPLOYMENT_TARGET = 27.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = io.ripa.timezonebuddyUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SUPPORTED_PLATFORMS = macosx;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2,7";
+				TEST_TARGET_NAME = "timezone-buddy";
+				XROS_DEPLOYMENT_TARGET = 27.0;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -446,6 +557,14 @@
 			buildConfigurations = (
 				0751A2EB309003F700D3DD29 /* Debug configuration for PBXNativeTarget "timezone-buddyTests" */,
 				0751A2EC309003F700D3DD29 /* Release configuration for PBXNativeTarget "timezone-buddyTests" */,
+			);
+			defaultConfigurationName = Release;
+		};
+		0751A3F83090124D00D3DD29 /* Build configuration list for PBXNativeTarget "timezone-buddyUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				0751A3F93090124D00D3DD29 /* Debug configuration for PBXNativeTarget "timezone-buddyUITests" */,
+				0751A3FA3090124D00D3DD29 /* Release configuration for PBXNativeTarget "timezone-buddyUITests" */,
 			);
 			defaultConfigurationName = Release;
 		};
