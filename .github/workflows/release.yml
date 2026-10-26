@@ -71,10 +71,11 @@ jobs:
           VERSION: ${{ steps.version.outputs.core_version }}
           # Pre-workflow releases reached build 6; the offset keeps CFBundleVersion
           # increasing even when this is one of the repository's first workflow runs.
-          BUILD_NUMBER: ${{ github.run_number + 6 }}
+          RUN_NUMBER: ${{ github.run_number }}
         run: |
           set -euo pipefail
 
+          BUILD_NUMBER=$((RUN_NUMBER + 6))
           ARCHIVE="$RUNNER_TEMP/TimezoneBuddy.xcarchive"
 
           xcodebuild archive \
