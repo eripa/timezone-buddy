@@ -79,6 +79,20 @@ struct AppSettingsTests {
         #expect(settings.zones.first?.id == firstID)
     }
 
+    @Test
+    func moveZoneMovesOneStepUpAndDown() throws {
+        let settings = AppSettings(defaults: try makeDefaults())
+        let firstID = try #require(settings.zones.first?.id)
+        let secondID = try #require(settings.zones.dropFirst().first?.id)
+
+        settings.moveZone(id: firstID, by: 1)
+        #expect(settings.zones.first?.id == secondID)
+        #expect(settings.zones.dropFirst().first?.id == firstID)
+
+        settings.moveZone(id: firstID, by: -1)
+        #expect(settings.zones.first?.id == firstID)
+    }
+
     private func makeDefaults() throws -> UserDefaults {
         let suiteName = "timezone-buddyTests.\(UUID().uuidString)"
         let defaults = try #require(UserDefaults(suiteName: suiteName))
