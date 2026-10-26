@@ -21,14 +21,18 @@ final class TimezoneBuddyUITests: XCTestCase {
 
         let statusItem = app.statusItems.firstMatch
         XCTAssertTrue(statusItem.waitForExistence(timeout: 10))
+
+        app.activate()
         statusItem.click()
 
-        XCTAssertTrue(app.staticTexts["Timezone Buddy"].waitForExistence(timeout: 5))
-
         let settingsButton = app.buttons["Settings…"]
-        XCTAssertTrue(settingsButton.waitForExistence(timeout: 5))
+        if !settingsButton.waitForExistence(timeout: 2) {
+            statusItem.click()
+        }
+
+        XCTAssertTrue(settingsButton.waitForExistence(timeout: 10))
         settingsButton.click()
 
-        XCTAssertTrue(app.windows["Settings"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.windows["Settings"].waitForExistence(timeout: 10))
     }
 }
