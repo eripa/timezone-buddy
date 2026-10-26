@@ -9,6 +9,7 @@ on:
 
 permissions:
   contents: read
+  pull-requests: write
 
 concurrency:
   group: ci-${{ github.ref }}
@@ -40,8 +41,97 @@ jobs:
           -scheme timezone-buddy -destination 'platform=macOS'
           -derivedDataPath "$RUNNER_TEMP/DerivedData"
 
-      - name: Test
-        run: >-
-          xcodebuild test -quiet -project timezone-buddy.xcodeproj
-          -scheme timezone-buddy -destination 'platform=macOS'
-          -derivedDataPath "$RUNNER_TEMP/DerivedData"
+      - name: Test with coverage
+        id: test
+        run: |
+          set -euo pipefail
+          rm -rf "$RUNNER_TEMP/Coverage.xcresult"
+          xcodebuild test -quiet -project timezone-buddy.xcodeproj \
+            -scheme timezone-buddy -destination 'platform=macOS' \
+            -derivedDataPath "$RUNNER_TEMP/DerivedData" \
+            -enableCodeCoverage YES \
+            -resultBundlePath "$RUNNER_TEMP/Coverage.xcresult"
+
+      - name: Summarize coverage
+        id: coverage
+        if: steps.test.outcome == 'success'
+        run: |
+          set -euo pipefail
+          RESULT="$RUNNER_TEMP/Coverage.xcresult"
+          REPORT="$RUNNER_TEMP/coverage-report.txt"
+
+          xcrun xccov view --report "$RESULT" > "$REPORT"
+          read -r COVERED EXECUTABLE PERCENT <<< "$(
+            xcrun xccov view --report --json "$RESULT" |
+              jq -r '.targets[] | select(.name == "Timezone Buddy.app") |
+                "\(.coveredLines) \(.executableLines) \((.lineCoverage * 10000 | round) / 100)"'
+          )"
+
+          if [[ -z "${PERCENT:-}" ]]; then
+            echo "::error::Could not find Timezone Buddy.app in the coverage report."
+            exit 1
+          fi
+
+          echo "app_coverage=$PERCENT" >> "$GITHUB_OUTPUT"
+          echo "app_covered=$COVERED" >> "$GITHUB_OUTPUT"
+          echo "app_executable=$EXECUTABLE" >> "$GITHUB_OUTPUT"
+
+          {
+            echo "## Coverage"
+            echo ""
+            echo "App target: **${PERCENT}%** line coverage (${COVERED}/${EXECUTABLE} lines)"
+            echo ""
+            echo '```'
+            xcrun xccov view --report --only-targets "$RESULT"
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload coverage report
+        if: steps.test.outcome == 'success'
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: coverage-report
+          path: |
+            ${{ runner.temp }}/Coverage.xcresult
+            ${{ runner.temp }}/coverage-report.txt
+          retention-days: 14
+
+      - name: Comment coverage on pull request
+        if: >-
+          github.event_name == 'pull_request' &&
+          steps.test.outcome == 'success' &&
+          github.event.pull_request.head.repo.full_name == github.repository
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          APP_COVERAGE: ${{ steps.coverage.outputs.app_coverage }}
+          APP_COVERED: ${{ steps.coverage.outputs.app_covered }}
+          APP_EXECUTABLE: ${{ steps.coverage.outputs.app_executable }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          set -euo pipefail
+          BODY_FILE="$RUNNER_TEMP/coverage-comment.md"
+
+          {
+            echo "<!-- coverage-report -->"
+            echo "### Coverage"
+            echo ""
+            echo "App target: **${APP_COVERAGE}%** line coverage (${APP_COVERED}/${APP_EXECUTABLE} lines)"
+            echo ""
+            echo "[Full CI run]($RUN_URL) · artifact: \`coverage-report\`"
+          } > "$BODY_FILE"
+
+          COMMENT_ID=$(gh api \
+            "repos/${GITHUB_REPOSITORY}/issues/${PR_NUMBER}/comments" \
+            --paginate \
+            --jq '[.[] | select(.body | contains("<!-- coverage-report -->")) | .id][0] // empty')
+
+          if [[ -n "$COMMENT_ID" ]]; then
+            gh api -X PATCH \
+              "repos/${GITHUB_REPOSITORY}/issues/comments/${COMMENT_ID}" \
+              --field body="$(cat "$BODY_FILE")"
+          else
+            gh api -X POST \
+              "repos/${GITHUB_REPOSITORY}/issues/${PR_NUMBER}/comments" \
+              --field body="$(cat "$BODY_FILE")"
+          fi
