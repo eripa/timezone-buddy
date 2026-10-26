@@ -195,9 +195,11 @@ private struct GeneralSettingsView: View {
             Section {
                 Toggle("Hide Dock icon", isOn: hideDockIconBinding)
 
-                Text("Timezone Buddy lives in the menu bar. When the Dock icon is hidden, open Settings from the menu bar panel.")
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
+                Text(
+                    "Timezone Buddy lives in the menu bar. When the Dock icon is hidden, open Settings from the menu bar panel."
+                )
+                .font(.caption)
+                .foregroundStyle(.secondary)
             } header: {
                 Text("Dock")
             }
@@ -225,13 +227,15 @@ private struct TimeZonesSettingsView: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            Text("Drag the handle to reorder. Click a name to relabel that zone — Calgary for Edmonton, say — and leave it empty to use the city name. The emoji box is optional.")
-                .font(.caption)
-                .foregroundStyle(.secondary)
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .padding(.horizontal, 16)
-                .padding(.top, 12)
-                .padding(.bottom, 8)
+            Text(
+                "Drag the handle to reorder. Click a name to relabel that zone — Calgary for Edmonton, say — and leave it empty to use the city name. The emoji box is optional."
+            )
+            .font(.caption)
+            .foregroundStyle(.secondary)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .padding(.horizontal, 16)
+            .padding(.top, 12)
+            .padding(.bottom, 8)
 
             ScrollView {
                 LazyVStack(spacing: 0) {

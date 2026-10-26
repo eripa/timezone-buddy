@@ -193,7 +193,8 @@ extension TimeZoneEntry {
             return all.map { Match(entry: $0, score: 0, matchedAlias: nil) }
         }
 
-        return all
+        return
+            all
             .compactMap { $0.match(for: trimmed) }
             .sorted { lhs, rhs in
                 if lhs.score != rhs.score { return lhs.score > rhs.score }
@@ -292,7 +293,8 @@ extension TimeZoneEntry {
         // twice, so those are dropped: "Montreal" is already a zone.
         let referenceCities = Set(identifiers.map { normalized(cityName(for: $0)) })
 
-        return identifiers
+        return
+            identifiers
             .compactMap { identifier in
                 guard let timeZone = TimeZone(identifier: identifier) else { return nil }
 
@@ -490,7 +492,7 @@ private enum ZoneCuration {
 
         // Global
         "Zulu": "UTC",
-        "Zulu Time": "UTC"
+        "Zulu Time": "UTC",
     ]
 
     /// Neutral short forms such as "MT".
@@ -502,7 +504,7 @@ private enum ZoneCuration {
         "CT": "America/Chicago",
         "ET": "America/New_York",
         "MT": "America/Denver",
-        "PT": "America/Los_Angeles"
+        "PT": "America/Los_Angeles",
     ]
 
     /// The zones people ask for most, used only to break ties: "EST" matches
@@ -520,7 +522,7 @@ private enum ZoneCuration {
         "Africa/Johannesburg", "Africa/Lagos", "Asia/Dubai", "Asia/Calcutta",
         "Asia/Shanghai", "Asia/Hong_Kong", "Asia/Tokyo", "Asia/Seoul",
         "Asia/Singapore", "Asia/Bangkok", "Asia/Jakarta", "Australia/Sydney",
-        "Australia/Melbourne", "Australia/Perth", "Pacific/Auckland"
+        "Australia/Melbourne", "Australia/Perth", "Pacific/Auckland",
     ]
 
     static let priority: [String: Int] = Dictionary(
@@ -529,14 +531,16 @@ private enum ZoneCuration {
     )
 
     /// Aliases grouped by the zone they resolve to.
-    static let aliasIndex: [String: [String]] = aliases
+    static let aliasIndex: [String: [String]] =
+        aliases
         .reduce(into: [String: [String]]()) { result, pair in
             result[pair.value, default: []].append(pair.key)
         }
         .mapValues { $0.sorted() }
 
     /// Generic short forms grouped by the zone they resolve to.
-    static let shortNamesByIdentifier: [String: [String]] = genericAbbreviations
+    static let shortNamesByIdentifier: [String: [String]] =
+        genericAbbreviations
         .reduce(into: [String: [String]]()) { result, pair in
             result[pair.value, default: []].append(pair.key)
         }
