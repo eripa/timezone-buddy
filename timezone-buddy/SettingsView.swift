@@ -20,18 +20,34 @@ struct SettingsView: View {
     @AppStorage("timezoneBuddy.settingsPane") private var selectedPane: SettingsPane = .general
 
     var body: some View {
-        TabView(selection: $selectedPane) {
-            Tab("General", systemImage: "gearshape", value: SettingsPane.general) {
-                GeneralSettingsView(settings: settings)
+        VStack(spacing: 0) {
+            // A native TabView tab bar leaves an empty material strip below the
+            // tab buttons in this AppKit-hosted window. A segmented Picker keeps
+            // the header flush with the content.
+            Picker("Settings section", selection: $selectedPane) {
+                Text("General").tag(SettingsPane.general)
+                Text("Time Zones").tag(SettingsPane.timeZones)
+                Text("About").tag(SettingsPane.about)
             }
+            .pickerStyle(.segmented)
+            .labelsHidden()
+            .frame(maxWidth: 360)
+            .padding(.horizontal, 16)
+            .padding(.vertical, 12)
 
-            Tab("Time Zones", systemImage: "globe", value: SettingsPane.timeZones) {
-                TimeZonesSettingsView(settings: settings)
-            }
+            Divider()
 
-            Tab("About", systemImage: "info.circle", value: SettingsPane.about) {
-                AboutSettingsView()
+            Group {
+                switch selectedPane {
+                case .general:
+                    GeneralSettingsView(settings: settings)
+                case .timeZones:
+                    TimeZonesSettingsView(settings: settings)
+                case .about:
+                    AboutSettingsView()
+                }
             }
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
         .frame(width: 580, height: 460)
     }

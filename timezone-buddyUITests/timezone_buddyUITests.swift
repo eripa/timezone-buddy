@@ -34,5 +34,11 @@ final class TimezoneBuddyUITests: XCTestCase {
         settingsButton.click()
 
         XCTAssertTrue(app.windows["Settings"].waitForExistence(timeout: 10))
+
+        let timeZonesTab = app.radioButtons["Time Zones"]
+        XCTAssertTrue(timeZonesTab.waitForExistence(timeout: 5))
+        timeZonesTab.click()
+
+        XCTAssertTrue(app.buttons["Add Time Zone"].waitForExistence(timeout: 5))
     }
 }

@@ -1,594 +1,600 @@
 {
-  "sourceLanguage" : "en",
-  "strings" : {
-    "" : {
-
-    },
-    "%@ is already added" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@ ist bereits hinzugefügt"
+  "sourceLanguage": "en",
+  "strings": {
+    "": {},
+    "%@ is already added": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ ist bereits hinzugefügt"
           }
         }
       }
     },
-    "%lld of %lld shown in menu bar" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%lld von %lld in der Menüleiste angezeigt"
+    "%lld of %lld shown in menu bar": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld von %lld in der Menüleiste angezeigt"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "%1$lld of %2$lld shown in menu bar"
+        "en": {
+          "stringUnit": {
+            "state": "new",
+            "value": "%1$lld of %2$lld shown in menu bar"
           }
         }
       }
     },
-    "12" : {
-
-    },
-    "About" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Über"
+    "12": {},
+    "About": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Über"
           }
         }
       }
     },
-    "Add %@ — %@" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@ hinzufügen – %@"
+    "Add %@ — %@": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ hinzufügen – %@"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "Add %1$@ — %2$@"
+        "en": {
+          "stringUnit": {
+            "state": "new",
+            "value": "Add %1$@ — %2$@"
           }
         }
       }
     },
-    "Add Time Zone" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Zeitzone hinzufügen"
+    "Add Time Zone": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zeitzone hinzufügen"
           }
         }
       }
     },
-    "Add Time Zones" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Zeitzonen hinzufügen"
+    "Add Time Zones": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zeitzonen hinzufügen"
           }
         }
       }
     },
-    "Approve Timezone Buddy in System Settings → General → Login Items." : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Timezone Buddy in Systemeinstellungen → Allgemein → Anmeldeobjekte bestätigen."
+    "Approve Timezone Buddy in System Settings → General → Login Items.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Timezone Buddy in Systemeinstellungen → Allgemein → Anmeldeobjekte bestätigen."
           }
         }
       }
     },
-    "Back to Now" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Zurück zu Jetzt"
+    "Back to Now": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zurück zu Jetzt"
           }
         }
       }
     },
-    "Choose Time Zones…" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Zeitzonen auswählen…"
+    "Choose Time Zones…": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zeitzonen auswählen…"
           }
         }
       }
     },
-    "Click to edit this time" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Klicken, um diese Uhrzeit zu bearbeiten"
+    "Click to edit this time": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Klicken, um diese Uhrzeit zu bearbeiten"
           }
         }
       }
     },
-    "Dock" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Dock"
+    "Dock": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dock"
           }
         }
       }
     },
-    "Done" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Fertig"
+    "Done": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fertig"
           }
         }
       }
     },
-    "Drag the handle to reorder, or use the reorder menu for keyboard access. Click a name to relabel that zone — Calgary for Edmonton, say — and leave it empty to use the city name. The emoji box is optional." : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ziehen Sie am Griff, um die Reihenfolge zu ändern, oder verwenden Sie das Verschieben-Menü für die Tastaturbedienung. Klicken Sie auf einen Namen, um die Zone umzubenennen – z. B. Calgary für Edmonton – und lassen Sie das Feld leer, um den Städtenamen zu verwenden. Das Emoji-Feld ist optional."
+    "Drag the handle to reorder, or use the reorder menu for keyboard access. Click a name to relabel that zone — Calgary for Edmonton, say — and leave it empty to use the city name. The emoji box is optional.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ziehen Sie am Griff, um die Reihenfolge zu ändern, oder verwenden Sie das Verschieben-Menü für die Tastaturbedienung. Klicken Sie auf einen Namen, um die Zone umzubenennen – z. B. Calgary für Edmonton – und lassen Sie das Feld leer, um den Städtenamen zu verwenden. Das Emoji-Feld ist optional."
           }
         }
       }
     },
-    "Drag to reorder" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Zum Ändern der Reihenfolge ziehen"
+    "Drag to reorder": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zum Ändern der Reihenfolge ziehen"
           }
         }
       }
     },
-    "Edit %@ time" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Uhrzeit für %@ bearbeiten"
+    "Edit %@ time": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Uhrzeit für %@ bearbeiten"
           }
         }
       }
     },
-    "Emoji for %@" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Emoji für %@"
+    "Emoji for %@": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Emoji für %@"
           }
         }
       }
     },
-    "Enter a 24-hour time, e.g. 20:19" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "24-Stunden-Zeit eingeben, z. B. 20:19"
+    "Enter a 24-hour time, e.g. 20:19": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "24-Stunden-Zeit eingeben, z. B. 20:19"
           }
         }
       }
     },
-    "General" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Allgemein"
+    "General": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Allgemein"
           }
         }
       }
     },
-    "h" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "h"
+    "h": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "h"
           }
         }
       }
     },
-    "HH:mm" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "HH:mm"
+    "HH:mm": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "HH:mm"
           }
         }
       }
     },
-    "Hide Dock icon" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Dock-Symbol ausblenden"
+    "Hide Dock icon": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dock-Symbol ausblenden"
           }
         }
       }
     },
-    "How many hours the slider covers in each direction." : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Wie viele Stunden der Schieberegler in jede Richtung abdeckt."
+    "How many hours the slider covers in each direction.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Wie viele Stunden der Schieberegler in jede Richtung abdeckt."
           }
         }
       }
     },
-    "Launch at login" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Bei Anmeldung starten"
+    "Launch at login": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bei Anmeldung starten"
           }
         }
       }
     },
-    "Live" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Live"
+    "Live": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Live"
           }
         }
       }
     },
-    "Menu Bar" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Menüleiste"
+    "Menu Bar": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Menüleiste"
           }
         }
       }
     },
-    "Move %@" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@ verschieben"
+    "Move %@": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ verschieben"
           }
         }
       }
     },
-    "Move Down" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Nach unten"
+    "Move Down": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nach unten"
           }
         }
       }
     },
-    "Move Up" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Nach oben"
+    "Move Up": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nach oben"
           }
         }
       }
     },
-    "Name for %@" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Name für %@"
+    "Name for %@": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Name für %@"
           }
         }
       }
     },
-    "No Time Zones Found" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Keine Zeitzonen gefunden"
+    "No Time Zones Found": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Keine Zeitzonen gefunden"
           }
         }
       }
     },
-    "No time zones selected" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Keine Zeitzonen ausgewählt"
+    "No time zones selected": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Keine Zeitzonen ausgewählt"
           }
         }
       }
     },
-    "Open Login Items Settings…" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Anmeldeobjekte öffnen…"
+    "Open Login Items Settings…": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Anmeldeobjekte öffnen…"
           }
         }
       }
     },
-    "Optional emoji or flag for this zone" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Optionales Emoji oder Flagge für diese Zone"
+    "Optional emoji or flag for this zone": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Optionales Emoji oder Flagge für diese Zone"
           }
         }
       }
     },
-    "Optional name, shown instead of %@" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Optionaler Name, statt %@ angezeigt"
+    "Optional name, shown instead of %@": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Optionaler Name, statt %@ angezeigt"
           }
         }
       }
     },
-    "Quit" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Beenden"
+    "Quit": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Beenden"
           }
         }
       }
     },
-    "Remove %@" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@ entfernen"
+    "Remove %@": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ entfernen"
           }
         }
       }
     },
-    "Reorder %@" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@ neu anordnen"
+    "Reorder %@": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ neu anordnen"
           }
         }
       }
     },
-    "Reset slider window to 12 hours" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Schieberegler-Fenster auf 12 Stunden zurücksetzen"
+    "Reset slider window to 12 hours": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Schieberegler-Fenster auf 12 Stunden zurücksetzen"
           }
         }
       }
     },
-    "Reset the slider window to 12 hours" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Das Schieberegler-Fenster auf 12 Stunden zurücksetzen"
+    "Reset the slider window to 12 hours": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Das Schieberegler-Fenster auf 12 Stunden zurücksetzen"
           }
         }
       }
     },
-    "Search cities, regions, names, or abbreviations" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Städte, Regionen, Namen oder Abkürzungen suchen"
+    "Search cities, regions, names, or abbreviations": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Städte, Regionen, Namen oder Abkürzungen suchen"
           }
         }
       }
     },
-    "Settings…" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Einstellungen…"
+    "Settings section": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Einstellungsbereich"
           }
         }
       }
     },
-    "Show emoji next to times" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Emoji neben Uhrzeiten anzeigen"
+    "Settings…": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Einstellungen…"
           }
         }
       }
     },
-    "Show in menu bar" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "In der Menüleiste anzeigen"
+    "Show emoji next to times": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Emoji neben Uhrzeiten anzeigen"
           }
         }
       }
     },
-    "Show in the menu bar" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "In der Menüleiste anzeigen"
+    "Show in menu bar": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "In der Menüleiste anzeigen"
           }
         }
       }
     },
-    "Show this zone in the menu bar" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Diese Zone in der Menüleiste anzeigen"
+    "Show in the menu bar": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "In der Menüleiste anzeigen"
           }
         }
       }
     },
-    "Slider window in hours" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Schieberegler-Fenster in Stunden"
+    "Show this zone in the menu bar": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Diese Zone in der Menüleiste anzeigen"
           }
         }
       }
     },
-    "Starts Timezone Buddy in the menu bar when you log in." : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Startet Timezone Buddy bei der Anmeldung in der Menüleiste."
+    "Slider window in hours": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Schieberegler-Fenster in Stunden"
           }
         }
       }
     },
-    "Startup" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Start"
+    "Starts Timezone Buddy in the menu bar when you log in.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Startet Timezone Buddy bei der Anmeldung in der Menüleiste."
           }
         }
       }
     },
-    "The clock list always opens when you click the menu bar item." : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Die Uhrzeitliste wird immer geöffnet, wenn Sie auf das Menüleisten-Symbol klicken."
+    "Startup": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Start"
           }
         }
       }
     },
-    "Time for %@" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Uhrzeit für %@"
+    "The clock list always opens when you click the menu bar item.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Die Uhrzeitliste wird immer geöffnet, wenn Sie auf das Menüleisten-Symbol klicken."
           }
         }
       }
     },
-    "Time offset" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Zeitversatz"
+    "Time for %@": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Uhrzeit für %@"
           }
         }
       }
     },
-    "Time Travel" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Zeitreise"
+    "Time offset": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zeitversatz"
           }
         }
       }
     },
-    "Time Zones" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Zeitzonen"
+    "Time Travel": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zeitreise"
           }
         }
       }
     },
-    "Timezone Buddy" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Timezone Buddy"
+    "Time Zones": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zeitzonen"
           }
         }
       }
     },
-    "Timezone Buddy lives in the menu bar. When the Dock icon is hidden, open Settings from the menu bar panel." : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Timezone Buddy lebt in der Menüleiste. Wenn das Dock-Symbol ausgeblendet ist, öffnen Sie die Einstellungen über das Menüleistenfenster."
+    "Timezone Buddy": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Timezone Buddy"
           }
         }
       }
     },
-    "Try a city, region, time zone name, or abbreviation — such as Calgary, Mountain Time, or MST." : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Versuchen Sie eine Stadt, Region, einen Zeitzonennamen oder eine Abkürzung – z. B. Calgary, Mountain Time oder MST."
+    "Timezone Buddy lives in the menu bar. When the Dock icon is hidden, open Settings from the menu bar panel.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Timezone Buddy lebt in der Menüleiste. Wenn das Dock-Symbol ausgeblendet ist, öffnen Sie die Einstellungen über das Menüleistenfenster."
           }
         }
       }
     },
-    "Window ±" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Fenster ±"
+    "Try a city, region, time zone name, or abbreviation — such as Calgary, Mountain Time, or MST.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Versuchen Sie eine Stadt, Region, einen Zeitzonennamen oder eine Abkürzung – z. B. Calgary, Mountain Time oder MST."
+          }
+        }
+      }
+    },
+    "Window ±": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fenster ±"
           }
         }
       }
     }
   },
-  "version" : "1.3"
+  "version": "1.3"
 }
