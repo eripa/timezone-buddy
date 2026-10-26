@@ -106,8 +106,9 @@ xcodebuild test -project timezone-buddy.xcodeproj -scheme timezone-buddy \
 
 Current app-target line coverage is **55.85%** at 1.5.0 (1,629/2,917 lines).
 The CI workflow runs the suite with coverage enabled, publishes the full report
-as an artifact, posts a summary on pull requests, and writes the same summary to
-the job page. The badge is a release snapshot; CI is the current source of truth.
+as an artifact, posts a summary on same-repository pull requests, and writes the
+same summary to the job page. The badge is a release snapshot; CI is the current
+source of truth.
 
 ## Using it
 
