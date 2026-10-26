@@ -8,7 +8,7 @@
 
 <p align="center">
   <a href="https://github.com/eripa/timezone-buddy/actions/workflows/ci.yml"><img src="https://github.com/eripa/timezone-buddy/actions/workflows/ci.yml/badge.svg" alt="CI status"></a>
-  <a href="https://github.com/eripa/timezone-buddy/actions/workflows/ci.yml"><img src="https://img.shields.io/badge/coverage-55.85%25-yellowgreen" alt="Coverage 55.85% at version 1.5.0"></a>
+  <a href="https://github.com/eripa/timezone-buddy/actions/workflows/ci.yml"><img src="https://img.shields.io/badge/coverage-64.77%25-yellowgreen" alt="Coverage 64.77% at version 1.5.1"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-GPL--3.0--or--later-blue.svg" alt="GPL-3.0-or-later"></a>
 </p>
 
@@ -104,7 +104,7 @@ xcodebuild test -project timezone-buddy.xcodeproj -scheme timezone-buddy \
   -destination 'platform=macOS'
 ```
 
-Current app-target line coverage is **55.85%** at 1.5.0 (1,629/2,917 lines).
+Current app-target line coverage is **64.77%** at 1.5.1 (1,914/2,955 lines).
 The CI workflow runs the suite with coverage enabled, publishes the full report
 as an artifact, posts a summary on same-repository pull requests, and writes the
 same summary to the job page. The badge is a release snapshot; CI is the current

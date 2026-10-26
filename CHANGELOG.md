@@ -5,12 +5,12 @@ All notable changes to Timezone Buddy are documented here.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
-## [Unreleased]
+## [1.5.1] - 2026-10-26
 
 ### Fixed
 
 - The Settings window no longer draws an empty material strip below the pane
-  tabs.
+  tabs. The pane switcher now uses a compact segmented header.
 
 ## [1.5.0] - 2026-10-26
 
