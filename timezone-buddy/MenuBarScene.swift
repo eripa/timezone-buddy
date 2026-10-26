@@ -76,6 +76,24 @@ struct MenuBarPanel: View {
         TimeTravelState.range(hours: settings.timeTravelRangeHours)
     }
 
+    /// Spacing between the slider's tick marks. Wide windows need sparser
+    /// ticks so the track stays legible in a 360pt-wide panel.
+    private var tickStride: Double {
+        switch settings.timeTravelRangeHours {
+        case ...3: 60
+        case ...12: 180
+        default: 360
+        }
+    }
+
+    /// The tick positions themselves, including both ends of the slider.
+    private var tickValues: [Double] {
+        let step = tickStride
+        return Array(
+            stride(from: sliderRange.lowerBound, through: sliderRange.upperBound, by: step)
+        )
+    }
+
     private var rangeHoursBinding: Binding<Int> {
         Binding(
             get: { settings.timeTravelRangeHours },
@@ -147,7 +165,7 @@ struct MenuBarPanel: View {
             .foregroundStyle(.secondary)
             .padding(.horizontal, 8)
             .padding(.vertical, 4)
-            .background(Color.primary.opacity(0.06), in: Capsule())
+            .background(.quaternary, in: Capsule())
         } else {
             Text(timeTravel.offsetDescription)
                 .font(.system(size: 10, weight: .semibold))
@@ -155,7 +173,7 @@ struct MenuBarPanel: View {
                 .foregroundStyle(.orange)
                 .padding(.horizontal, 8)
                 .padding(.vertical, 4)
-                .background(Color.orange.opacity(0.14), in: Capsule())
+                .background(.quaternary, in: Capsule())
         }
     }
 
@@ -223,12 +241,18 @@ struct MenuBarPanel: View {
 
             Slider(
                 value: sliderValueBinding,
-                in: sliderRange
+                in: sliderRange,
+                neutralValue: 0
             ) {
                 Text("Time offset")
+            } ticks: {
+                SliderTickContentForEach(tickValues, id: \.self) { minutes in
+                    SliderTick(minutes)
+                }
             }
             .labelsHidden()
             .controlSize(.small)
+            .tint(timeTravel.isNow ? .accentColor : .orange)
             .accessibilityLabel("Time offset")
             .accessibilityValue(timeTravel.accessibilityDescription)
 
@@ -337,7 +361,6 @@ struct MenuBarPanel: View {
         .foregroundStyle(.secondary)
         .padding(.horizontal, 16)
         .padding(.vertical, 10)
-        .background(Color.primary.opacity(0.03))
     }
 
     private func openSettingsWindow() {
@@ -399,10 +422,7 @@ private struct TimeZoneRow: View {
                 .frame(width: 62)
                 .padding(.horizontal, 4)
                 .padding(.vertical, 1)
-                .background(
-                    RoundedRectangle(cornerRadius: 5)
-                        .fill(Color.primary.opacity(0.08))
-                )
+                .background(.quaternary, in: RoundedRectangle(cornerRadius: 5))
                 .overlay(
                     RoundedRectangle(cornerRadius: 5)
                         .stroke(
@@ -439,10 +459,12 @@ private struct TimeZoneRow: View {
                     .minimumScaleFactor(0.8)
                     .padding(.horizontal, 4)
                     .padding(.vertical, 1)
-                    .background(
-                        RoundedRectangle(cornerRadius: 5)
-                            .fill(Color.primary.opacity(isHoveringTime ? 0.07 : 0))
-                    )
+                    .background {
+                        if isHoveringTime {
+                            RoundedRectangle(cornerRadius: 5)
+                                .fill(.quaternary)
+                        }
+                    }
             }
             .buttonStyle(.plain)
             .onHover { hovering in

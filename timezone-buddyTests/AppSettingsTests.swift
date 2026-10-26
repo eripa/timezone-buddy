@@ -66,20 +66,17 @@ struct AppSettingsTests {
     }
 
     @Test
-    func zonesCanBeReorderedAndRemovedByOffset() throws {
+    func zonesCanBeReordered() throws {
         let settings = AppSettings(defaults: try makeDefaults())
         settings.addZone(identifier: "Europe/Paris")
-        settings.addZone(identifier: "Asia/Tokyo")
         let firstID = try #require(settings.zones.first?.id)
+        let secondID = try #require(settings.zones.dropFirst().first?.id)
 
-        settings.moveZones(fromOffsets: IndexSet(integer: 0), toOffset: settings.zones.count)
-
+        settings.moveZones([firstID], before: nil)
         #expect(settings.zones.last?.id == firstID)
 
-        let countBefore = settings.zones.count
-        settings.removeZones(atOffsets: IndexSet(integer: 0))
-
-        #expect(settings.zones.count == countBefore - 1)
+        settings.moveZones([firstID], before: secondID)
+        #expect(settings.zones.first?.id == firstID)
     }
 
     private func makeDefaults() throws -> UserDefaults {

@@ -5,9 +5,9 @@ import Foundation
 
 /// Locale-aware time formatting for a specific time zone.
 ///
-/// `DateFormatter` instances are cached per time zone because the drop-down
-/// refreshes every second. The cache is main-actor isolated alongside the views
-/// that use it.
+/// `DateFormatter` instances are cached per time zone because the panel
+/// redraws as the clock and time-travel slider update. The cache is main-actor
+/// isolated alongside the views that use it.
 @MainActor
 enum TimeFormatting {
     private static var timeFormatters: [String: DateFormatter] = [:]

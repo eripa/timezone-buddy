@@ -183,13 +183,37 @@ final class AppSettings {
         persist()
     }
 
-    func removeZones(atOffsets offsets: IndexSet) {
-        zones.remove(atOffsets: offsets)
-        persist()
+    /// Applies a drag reorder reported by a `reorderContainer` modifier.
+    ///
+    /// `ReorderDifference` identifies dragged rows by ID instead of by index,
+    /// so the rows are lifted out first and then reinserted ahead of the row
+    /// they were dropped on.
+    func applyReorder(_ difference: ReorderDifference<UUID, ReorderableSingleCollectionIdentifier>) {
+        let targetID: UUID?
+        switch difference.destination.position {
+        case .before(let id):
+            targetID = id
+        case .end:
+            targetID = nil
+        }
+
+        moveZones(Set(difference.sources), before: targetID)
     }
 
-    func moveZones(fromOffsets: IndexSet, toOffset: Int) {
-        zones.move(fromOffsets: fromOffsets, toOffset: toOffset)
+    /// Moves the identified zones ahead of `targetID`, or to the end when it is
+    /// `nil`. Split from `applyReorder` so the reorder rule can be tested
+    /// without constructing SwiftUI's drop-destination type.
+    func moveZones(_ ids: Set<UUID>, before targetID: UUID?) {
+        let moving = zones.filter { ids.contains($0.id) }
+        guard !moving.isEmpty else { return }
+
+        var remaining = zones.filter { !ids.contains($0.id) }
+        let insertionIndex = targetID.flatMap { id in
+            remaining.firstIndex { $0.id == id }
+        } ?? remaining.count
+
+        remaining.insert(contentsOf: moving, at: insertionIndex)
+        zones = remaining
         persist()
     }
 
