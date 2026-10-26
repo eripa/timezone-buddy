@@ -1,0 +1,158 @@
+name: Release
+
+# Tag with v1.2.3 (or v1.2.3-beta.1) to publish a release.
+# The glob is intentionally broad; the validation step enforces exact semver.
+on:
+  push:
+    tags:
+      - "v*.*.*"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release-${{ github.ref_name }}
+  cancel-in-progress: false
+
+jobs:
+  release:
+    # GitHub-hosted Xcode 27 image (arm64). See the runner-images repository
+    # for the current label if GitHub retires this image.
+    runs-on: xcode-27
+    timeout-minutes: 20
+
+    env:
+      SCHEME: timezone-buddy
+      APP_NAME: Timezone Buddy
+
+    steps:
+      - name: Check out
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          persist-credentials: false
+
+      - name: Show toolchain
+        run: xcodebuild -version
+
+      - name: Validate semver tag
+        id: version
+        run: |
+          set -euo pipefail
+
+          TAG="$GITHUB_REF_NAME"
+          SEMVER_RE='^v(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)(-[0-9A-Za-z-]+(\.[0-9A-Za-z-]+)*)?(\+[0-9A-Za-z-]+(\.[0-9A-Za-z-]+)*)?$'
+
+          if [[ ! "$TAG" =~ $SEMVER_RE ]]; then
+            echo "::error::Tag '$TAG' is not semver. Expected v1.2.3 or v1.2.3-beta.1."
+            exit 1
+          fi
+
+          VERSION="${TAG#v}"
+          BASE_VERSION="${VERSION%%+*}"
+          CORE_VERSION="${BASE_VERSION%%-*}"
+          PRERELEASE=false
+          if [[ "$BASE_VERSION" == *-* ]]; then
+            PRERELEASE=true
+          fi
+
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "core_version=$CORE_VERSION" >> "$GITHUB_OUTPUT"
+          echo "prerelease=$PRERELEASE" >> "$GITHUB_OUTPUT"
+
+          {
+            echo "### Releasing \`$TAG\`"
+            echo ""
+            echo "- Marketing version: \`$CORE_VERSION\`"
+            echo "- Prerelease: \`$PRERELEASE\`"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Build ad-hoc signed release
+        env:
+          VERSION: ${{ steps.version.outputs.core_version }}
+          # Pre-workflow releases reached build 6; the offset keeps CFBundleVersion
+          # increasing even when this is one of the repository's first workflow runs.
+          BUILD_NUMBER: ${{ github.run_number + 6 }}
+        run: |
+          set -euo pipefail
+
+          ARCHIVE="$RUNNER_TEMP/TimezoneBuddy.xcarchive"
+
+          xcodebuild archive \
+            -project timezone-buddy.xcodeproj \
+            -scheme "$SCHEME" \
+            -configuration Release \
+            -destination "generic/platform=macOS" \
+            -archivePath "$ARCHIVE" \
+            -derivedDataPath "$RUNNER_TEMP/DerivedData" \
+            CODE_SIGN_STYLE=Manual \
+            CODE_SIGN_IDENTITY="-" \
+            DEVELOPMENT_TEAM="" \
+            CODE_SIGNING_REQUIRED=NO \
+            MARKETING_VERSION="$VERSION" \
+            CURRENT_PROJECT_VERSION="$BUILD_NUMBER"
+
+          APP="$ARCHIVE/Products/Applications/$APP_NAME.app"
+          test -d "$APP"
+
+          ACTUAL_VERSION=$(/usr/libexec/PlistBuddy -c "Print :CFBundleShortVersionString" "$APP/Contents/Info.plist")
+          if [[ "$ACTUAL_VERSION" != "$VERSION" ]]; then
+            echo "::error::Expected CFBundleShortVersionString $VERSION, got $ACTUAL_VERSION."
+            exit 1
+          fi
+
+          codesign --verify --deep --strict --verbose=2 "$APP"
+
+          # Capture the output first: piping codesign into `grep -q` under
+          # `pipefail` can return SIGPIPE (141) even when the signature is valid.
+          SIGNATURE_INFO="$(codesign -dv --verbose=4 "$APP" 2>&1)"
+          if ! grep -q "Signature=adhoc" <<<"$SIGNATURE_INFO"; then
+            echo "::error::Expected an ad-hoc signature."
+            exit 1
+          fi
+
+          ENTITLEMENTS="$(codesign -d --entitlements :- "$APP" 2>/dev/null)"
+          if grep -q "get-task-allow" <<<"$ENTITLEMENTS"; then
+            echo "::error::Release build contains the get-task-allow entitlement."
+            exit 1
+          fi
+
+          echo "APP_PATH=$APP" >> "$GITHUB_ENV"
+
+      - name: Package app
+        env:
+          VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          set -euo pipefail
+
+          ASSET="$RUNNER_TEMP/$APP_NAME-$VERSION.zip"
+          ditto -c -k --keepParent "$APP_PATH" "$ASSET"
+
+          (cd "$RUNNER_TEMP" && shasum -a 256 "$(basename "$ASSET")" > "$(basename "$ASSET").sha256")
+
+          echo "ASSET_PATH=$ASSET" >> "$GITHUB_ENV"
+          echo "SHA_PATH=$ASSET.sha256" >> "$GITHUB_ENV"
+
+      - name: Publish GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          VERSION: ${{ steps.version.outputs.version }}
+          PRERELEASE: ${{ steps.version.outputs.prerelease }}
+        run: |
+          set -euo pipefail
+
+          if gh release view "$GITHUB_REF_NAME" >/dev/null 2>&1; then
+            IS_DRAFT=$(gh release view "$GITHUB_REF_NAME" --json isDraft -q .isDraft)
+            if [[ "$IS_DRAFT" != "true" ]]; then
+              echo "::error::Release $GITHUB_REF_NAME is already published; refusing to overwrite."
+              exit 1
+            fi
+            gh release upload "$GITHUB_REF_NAME" "$ASSET_PATH" "$SHA_PATH" --clobber
+          else
+            ARGS=(--draft --title "Timezone Buddy $VERSION" --generate-notes --verify-tag)
+            if [[ "$PRERELEASE" == "true" ]]; then
+              ARGS+=(--prerelease)
+            fi
+            gh release create "$GITHUB_REF_NAME" "$ASSET_PATH" "$SHA_PATH" "${ARGS[@]}"
+          fi
+
+          gh release edit "$GITHUB_REF_NAME" --draft=false
