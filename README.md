@@ -8,7 +8,7 @@
 
 <p align="center">
   <a href="https://github.com/eripa/timezone-buddy/actions/workflows/ci.yml"><img src="https://github.com/eripa/timezone-buddy/actions/workflows/ci.yml/badge.svg" alt="CI status"></a>
-  <a href="https://github.com/eripa/timezone-buddy/actions/workflows/ci.yml"><img src="https://img.shields.io/badge/coverage-64.77%25-yellowgreen" alt="Coverage 64.77% at version 1.5.1"></a>
+  <a href="https://github.com/eripa/timezone-buddy/actions/workflows/ci.yml"><img src="https://img.shields.io/badge/coverage-53.81%25-yellowgreen" alt="Coverage 53.81% at version 1.5.1"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-GPL--3.0--or--later-blue.svg" alt="GPL-3.0-or-later"></a>
 </p>
 
@@ -97,14 +97,14 @@ Or open `timezone-buddy.xcodeproj` in Xcode and press Run.
 ### Running tests
 
 The Swift Testing suite covers the models and formatting, and a UI smoke test
-opens the menu bar panel and Settings window:
+opens the Settings window and switches to the Time Zones pane:
 
 ```sh
 xcodebuild test -project timezone-buddy.xcodeproj -scheme timezone-buddy \
   -destination 'platform=macOS'
 ```
 
-Current app-target line coverage is **64.77%** at 1.5.1 (1,914/2,955 lines).
+Current app-target line coverage is **53.81%** at 1.5.1 (1,596/2,966 lines).
 The CI workflow runs the suite with coverage enabled, publishes the full report
 as an artifact, posts a summary on same-repository pull requests, and writes the
 same summary to the job page. The badge is a release snapshot; CI is the current

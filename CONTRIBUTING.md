@@ -44,7 +44,7 @@ Or open `timezone-buddy.xcodeproj` in Xcode and press Run.
 - Date and time logic is the most bug-prone part of the app. Cover DST gaps,
   half-hour offsets, date-line changes, and time-travel bounds when relevant.
 - UI tests live in `timezone-buddyUITests` and use XCUIAutomation. Keep the
-  smoke test focused on the menu bar panel and Settings window.
+  smoke test focused on the Settings window and pane switching.
 - User-facing strings live in `timezone-buddy/Localizable.xcstrings`; add
   translations through the String Catalog in Xcode rather than hard-coding
   localized copies in views.

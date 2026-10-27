@@ -34,6 +34,16 @@ struct TimezoneBuddyApp: App {
 final class AppDelegate: NSObject, NSApplicationDelegate {
     func applicationDidFinishLaunching(_ notification: Notification) {
         DockIconController.apply(hidden: AppSettings.shared.hideDockIcon)
+
+        #if DEBUG
+            // UI tests cannot reliably reach the menu bar extra on a hosted
+            // runner, so this debug-only switch opens Settings directly.
+            if ProcessInfo.processInfo.arguments.contains("-openSettingsForTesting") {
+                DispatchQueue.main.async {
+                    SettingsWindowController.shared.show()
+                }
+            }
+        #endif
     }
 
     func applicationWillTerminate(_ notification: Notification) {

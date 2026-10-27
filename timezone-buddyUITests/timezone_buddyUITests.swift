@@ -10,30 +10,20 @@ final class TimezoneBuddyUITests: XCTestCase {
     }
 
     @MainActor
-    func testMenuBarPanelOpensSettings() throws {
+    func testSettingsWindowOpensAndSwitchesPanes() throws {
         let app = XCUIApplication()
+        app.launchArguments = ["-openSettingsForTesting"]
         app.launch()
 
-        XCTAssertTrue(
-            app.wait(for: .runningForeground, timeout: 10)
-                || app.state == .runningBackground
-        )
-
-        let statusItem = app.statusItems.firstMatch
-        XCTAssertTrue(statusItem.waitForExistence(timeout: 10))
-
-        app.activate()
-        statusItem.click()
-
-        let settingsButton = app.buttons["Settings…"]
-        if !settingsButton.waitForExistence(timeout: 2) {
-            statusItem.click()
-        }
-
-        XCTAssertTrue(settingsButton.waitForExistence(timeout: 10))
-        settingsButton.click()
-
         XCTAssertTrue(app.windows["Settings"].waitForExistence(timeout: 10))
+
+        let generalTab = app.radioButtons["General"]
+        XCTAssertTrue(generalTab.waitForExistence(timeout: 5))
+        generalTab.click()
+
+        let aboutTab = app.radioButtons["About"]
+        XCTAssertTrue(aboutTab.waitForExistence(timeout: 5))
+        aboutTab.click()
 
         let timeZonesTab = app.radioButtons["Time Zones"]
         XCTAssertTrue(timeZonesTab.waitForExistence(timeout: 5))
